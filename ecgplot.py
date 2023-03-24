@@ -23,6 +23,7 @@ g_leads = ['I','II','III','aVR','aVL','aVF','V1','V2','V3','V4','V5','V6' ]
 BASIC_SRATE = 500 #Hz
 print('Basic sampling rate(Hz):',BASIC_SRATE)
 rec_list = os.listdir(DATASET_DIR)
+print (rec_list)
 rec_count = 0 
 rec_count_expected = int(len(rec_list)/2)
 rec_name_sep = ','
@@ -35,7 +36,6 @@ for f in rec_list:
         rec_count+=1
 rec_file.close()
 assert(rec_count_expected == rec_count) # should be equal )
-print(rec_count)
 load_txt = np.loadtxt('./RECORDS.csv', delimiter=',', dtype='str')
 rec_count = int(load_txt[0])
 rec_list = load_txt[1:]
