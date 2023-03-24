@@ -6,7 +6,7 @@ plt.rcParams["figure.autolayout"] = True
 
 headers = ['I','II','III','aVR','aVL','aVF','V1','V2','V3','V4','V5','V6']
 
-df = pd.read_csv('prueba1.csv', names=headers)
+df = pd.read_csv('prueba1.csv', usecols = ['II'])
 
 df.set_index('Name').plot()
 
