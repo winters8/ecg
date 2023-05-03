@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import heartpy as hp
-import time
+
 # Resample the signal to 100 Hz
 signal = hp.get_data('prueba2.csv', delim =',', column_name = 'II')
 working_data, measures = hp.process(signal, 500.0)
