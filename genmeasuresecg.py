@@ -8,7 +8,7 @@ class node:
         self.node=node
         self.measures=measure
 listnodes = []
-dir_path= "D:/Descargas/ECGDataDenoised"
+dir_path= "C:/Users/plati/Downloads/ECGDataDenoised"
 file_list = os.listdir(dir_path)
 for file_name in file_list:
     print(file_name)
@@ -24,8 +24,8 @@ print (listnodes)
 with open('dataecgs.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     # Write the header row
-    writer.writerow(['node', 'measure'])
+    writer.writerow(['node', 'measures'])
 
     # Write each person as a row in the CSV file
     for node1 in listnodes:
-        writer.writerow([node1.node, node1.measure])
+        writer.writerow([node1.node, node1.measures])
