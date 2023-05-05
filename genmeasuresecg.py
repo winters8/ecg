@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import heartpy as hp
 import multiprocessing
 import time
+import json
 class node:
     def __init__ (self,file,measure):
         self.file=file
@@ -14,6 +15,9 @@ def processfile(file):
     try:
         signal = hp.get_data(file, delim =',', column_name = 'II')
         working_data, measures = hp.process(signal, 500.0)
+        if pd.isna(measures['bpm']):
+            print (str(measures['bpm']))
+            measures=0
     except:
         measures= 0
     return file,measures
@@ -28,7 +32,7 @@ def multiproceso():
         listnodes=[]
         with multiprocessing.Pool() as pool:
             for file,result in pool.imap_unordered(processfile, files):
-                node1=node(file,result)
+                node1=node(os.path.basename(file),result)
                 result_list.append(node1)
             pool.close()
             pool.join()
@@ -39,6 +43,8 @@ def multiproceso():
             writer.writerow(['node', 'measures'])
             #Write each nodes as a row in the CSV file
             for node1 in result_list:
-               writer.writerow([node1.file, node1.measures])
-               
+               if (node1.measures!=0):
+                writer.writerow([node1.file, node1.measures])
+            
+
 multiproceso()
