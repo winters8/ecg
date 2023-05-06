@@ -1,11 +1,9 @@
 import os
 import csv
 import pandas as pd
-import matplotlib.pyplot as plt
 import heartpy as hp
 import multiprocessing
-import time
-import json
+
 class node:
     def __init__ (self,file,measure):
         self.file=file
@@ -16,7 +14,6 @@ def processfile(file):
         signal = hp.get_data(file, delim =',', column_name = 'II')
         working_data, measures = hp.process(signal, 500.0)
         if pd.isna(measures['bpm']):
-            print (str(measures['bpm']))
             measures=0
     except:
         measures= 0
@@ -45,6 +42,5 @@ def multiproceso():
             for node1 in result_list:
                if (node1.measures!=0):
                 writer.writerow([node1.file, node1.measures])
-            
 
 multiproceso()
