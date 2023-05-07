@@ -25,17 +25,17 @@ import pylab as plt # This module depens on Numpy and Matplotlib
 
 # Set up sublot/canvas array e.j.: subplot(nrows, ncols, index)
 # and indicate the current index
-fig = plt.figure(figsize=(25,15))
-fig.add_subplot(1,2,1) 
-plt.title("Original Florentine PADGM graph")
-# Draw the original graph on the indicated sublot/canvas
+fig = plt.figure(figsize=(50,50),dpi=200)
+plt.title("Original ECG PADGM graph")
+# Draw the original graph 
 nx.draw(G, with_labels=False)
+plt.savefig('matplot.png')
+plt.clf()
 
-fig.add_subplot(1,2,2)  #(row=1,col=2)
-plt.title("Colored and resized nodes (e.g. Eigenvector centrality) - Florentine PADGM graph")
+plt.title("Colored and resized nodes (e.g. Eigenvector centrality) - ECG PADGM graph")
 d = cindexes.eigenvectorCentrality(G,tol=1e-06) # Change by any other centrality index you want...
 # d = cindexes.betweennessCentrality(G) # Change by any other centrality index you want...
 n_color = np.asarray(list(d.values()))
 nx.draw(G, nodelist=d.keys(), node_color=n_color, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
 # Finally make the array plot (and their content) visible
-plt.savefig('matplot.png')
+plt.savefig('matplot2.png')
