@@ -27,7 +27,7 @@ fig = plt.figure(figsize=(25,15))
 fig.add_subplot(1,2,1) 
 plt.title("Original Florentine PADGM graph")
 # Draw the original graph on the indicated sublot/canvas
-nx.draw(G, with_labels=True)
+nx.draw(G, with_labels=False)
 
 fig.add_subplot(1,2,2)  #(row=1,col=2)
 plt.title("Colored and resized nodes (e.g. Eigenvector centrality) - Florentine PADGM graph")
