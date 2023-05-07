@@ -43,7 +43,7 @@ def multiproceso(i,rows,header_row,G):
             data2 = p.sub('\"', data2)
             data_like_objetc2 = io.StringIO(data2)
             data2= json.load(data_like_objetc2)
-            if abs(data1["bpm"]-data2["bpm"])<10:
+            if abs(data1["bpm"]-data2["bpm"])<5:
                 G.add_edge(name1,name2)
     except json.decoder.JSONDecodeError as e:
         print (f"Error parsin JSIN data {e}")
@@ -59,7 +59,7 @@ def addedges(file,G):
         column_index = header_row.index('node')
         column_index1 = header_row.index('measures')
         rows = list(reader)
-        G=Parallel(n_jobs=20)(delayed(multiproceso)(i,rows,header_row,G) for i in range(len(rows)))
+        G=Parallel(n_jobs=10)(delayed(multiproceso)(i,rows,header_row,G) for i in range(len(rows)))
     return G
             
 

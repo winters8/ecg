@@ -2,6 +2,20 @@ from snapylib import snafacade
 from snapylib.topological import indexes as tindexes
 from snapylib.centralities import indexes as cindexes
 from snapylib.communities import communities as communities
+import matplotlib.colors as mcolors
+import networkx as nx
+import networkx.algorithms.community as nx_comm
+def louvaincommunities(G):
+    """
+    Find the best partition of a graph using the Louvain Community Detection Algorithm
+    Returns: a listof sets (partition of G). Each set represents one community and contains all the nodes that constitute it.
+    """
+    comunidades = nx_comm.louvain_communities(
+                G          = G,
+                weight     = 'weight',
+                resolution = 0.2
+             )
+    return comunidades
 
 G = snafacade.loadGraphml("graph.graphml")
 print( "##################################################\n#############Topological network indexes##########\n##################################################")
@@ -36,4 +50,20 @@ d = cindexes.eigenvectorCentrality(G,tol=1e-06) # Change by any other centrality
 n_color = np.asarray(list(d.values()))
 nx.draw(G, nodelist=d.keys(), node_color=n_color, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
 # Finally make the array plot (and their content) visible
-plt.savefig('matplot.png') 
+plt.savefig('matplot.png')
+
+#louvain algorithm
+partition1 = louvaincommunities(G)
+comunidades_map = {}
+for i in range(len(partition1)):
+    comunidades_map.update(dict.fromkeys(partition1[i], i))
+
+comunidades_map
+color_pallet = list(mcolors.XKCD_COLORS.values())
+color_nodos = []
+for node in G:
+    color_nodos.append(color_pallet[comunidades_map[node]])
+fig, ax = plt.subplots(figsize=(6, 4))
+nx.draw(G, node_color=color_nodos, with_labels=False, ax=ax)
+plt.savefig('louvainECG.png')
+
