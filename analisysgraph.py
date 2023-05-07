@@ -5,7 +5,7 @@ from snapylib.communities import communities as communities
 import matplotlib.colors as mcolors
 import networkx as nx
 import networkx.algorithms.community as nx_comm
-G = snafacade.loadGraphml("graph.graphml")
+G = snafacade.loadGraphml("graph10bmp.graphml")
 print( "##################################################\n#############Topological network indexes##########\n##################################################")
 N = tindexes.numNodes(G)
 print("Number of nodes (N): ", N)
@@ -27,8 +27,9 @@ import pylab as plt # This module depens on Numpy and Matplotlib
 # and indicate the current index
 fig = plt.figure(figsize=(50,50),dpi=200)
 plt.title("Original ECG PADGM graph")
-# Draw the original graph 
-nx.draw(G, with_labels=False)
+# Draw the original graph
+pos1 = nx.kamada_kawai_layout(G)
+nx.draw(G,pos=pos1,with_labels=False,edge_color='black', width=2.0)
 plt.savefig('matplot.png')
 plt.clf()
 
@@ -36,6 +37,6 @@ plt.title("Colored and resized nodes (e.g. Eigenvector centrality) - ECG PADGM g
 d = cindexes.eigenvectorCentrality(G,tol=1e-06) # Change by any other centrality index you want...
 # d = cindexes.betweennessCentrality(G) # Change by any other centrality index you want...
 n_color = np.asarray(list(d.values()))
-nx.draw(G, nodelist=d.keys(), node_color=n_color, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
+nx.draw(G, pos=pos1,nodelist=d.keys(), node_color=n_color,edge_color='black', width=2.0, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
 # Finally make the array plot (and their content) visible
 plt.savefig('matplot2.png')
