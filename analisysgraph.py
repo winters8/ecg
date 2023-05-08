@@ -28,7 +28,7 @@ import pylab as plt # This module depens on Numpy and Matplotlib
 fig = plt.figure(figsize=(50,50),dpi=200)
 plt.title("Original ECG PADGM graph")
 # Draw the original graph
-pos1 = nx.kamada_kawai_layout(G)
+pos1 = nx.fruchterman_reingold_layout(G)
 nx.draw(G,pos=pos1,with_labels=False,edge_color='black', width=2.0)
 plt.savefig('matplot.png')
 plt.clf()
