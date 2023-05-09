@@ -5,7 +5,7 @@ from snapylib.communities import communities as communities
 import matplotlib.colors as mcolors
 import networkx as nx
 import networkx.algorithms.community as nx_comm
-G = snafacade.loadGraphml("graph10bmp.graphml")
+G = snafacade.loadGraphml("graphgiant.graphml")
 print( "##################################################\n#############Topological network indexes##########\n##################################################")
 N = tindexes.numNodes(G)
 print("Number of nodes (N): ", N)

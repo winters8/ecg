@@ -10,6 +10,7 @@ import io
 from joblib import parallel_backend,Parallel, delayed
 
 G= nx.Graph()
+Ggiant=nx.Graph()
 
 def comprobarsemejanza(record1,record2):
     if abs(record1-record2<10):
@@ -98,8 +99,11 @@ def addedges2(file,G):
         return G
 
 
-G1=addedges("dataecgs.csv",G)
+G1=addedges(".\csv\dataecgs.csv",G)
 for edge in G1:
     G.add_edges_from(edge.edges)
-G=addnodes("dataecgs.csv",G)
+G=addnodes(".\csv\dataecgs.csv",G)
+components = nx.connected_components(G)
+Ggiant=G.subgraph(max(components,key=len)).copy()
 nx.write_graphml(G,"graph.graphml")
+nx.write_graphml(Ggiant,"graphgiant.graphml")
