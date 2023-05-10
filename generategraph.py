@@ -67,7 +67,6 @@ def addedges(file,G):
 def addedges2(file,G):     
     with open (file,'r') as csvfile:
         reader = csv.reader(csvfile)
-        reader = csv.reader(csvfile)
         header_row = next(reader)
         column_index = header_row.index('node')
         column_index1 = header_row.index('measures')

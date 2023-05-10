@@ -29,7 +29,7 @@ fig = plt.figure(figsize=(50,50),dpi=200)
 plt.title("Original ECG PADGM graph")
 # Draw the original graph
 pos1 = nx.fruchterman_reingold_layout(G)
-nx.draw(G,pos=pos1,with_labels=False,edge_color='black', width=2.0)
+nx.draw(G,pos=pos1,with_labels=False,edge_color='black', width=1.0)
 plt.savefig('matplot.png')
 plt.clf()
 
@@ -37,6 +37,6 @@ plt.title("Colored and resized nodes (e.g. Eigenvector centrality) - ECG PADGM g
 d = cindexes.eigenvectorCentrality(G,tol=1e-06) # Change by any other centrality index you want...
 # d = cindexes.betweennessCentrality(G) # Change by any other centrality index you want...
 n_color = np.asarray(list(d.values()))
-nx.draw(G, pos=pos1,nodelist=d.keys(), node_color=n_color,edge_color='black', width=2.0, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
+nx.draw(G, pos=pos1,nodelist=d.keys(), node_color=n_color,edge_color='black', width=1.0, node_size=[(v*5000)+50 for v in d.values()], with_labels=False)
 # Finally make the array plot (and their content) visible
 plt.savefig('matplot2.png')
