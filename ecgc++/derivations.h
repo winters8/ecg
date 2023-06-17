@@ -1,21 +1,22 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <vector>
 
 class Derivation {
 private:
-    std::list<double> derivation_data;
+    std::vector<double> derivation_data;
     std::string derivation_name;
 
 public:
     // Constructor derivation
-    Derivation(const std::list<double>& doubleList, const std::string& str) {
+    Derivation(const std::vector<double>& doubleList, const std::string& str) {
         derivation_data = doubleList;
         derivation_name = str;
     }
     
     // Getter derivation data
-    std::list<double> getdoubleList() const {
+    std::vector<double> getdoubleList() const {
         return derivation_data;
     }
 
@@ -25,7 +26,7 @@ public:
     }
 
     // Setter data derivation
-    void setIntList(const std::list<double>& doubleList) {
+    void setIntList(const std::vector<double>& doubleList) {
         derivation_data = doubleList;
     }
 
