@@ -15,7 +15,7 @@ public:
     }
     
     // Getter derivation data
-    std::list<double> getIntList() const {
+    std::list<double> getdoubleList() const {
         return derivation_data;
     }
 
