@@ -6,9 +6,9 @@
 class ECG{
 private:
     std::string ID;
-    std::list<Derivation> derivations;
 
 public:
+    std::list<Derivation> derivations;
     //Constructor ECG
     ECG(const std::list<Derivation>& derivationList, const std::string& str){
     derivations = derivationList;
@@ -21,5 +21,9 @@ public:
     //Getter ECG ID
     std::string getID_ECG() const{
         return ID;
+    }
+    void add_derivation(Derivation Derivation) {
+        derivations.push_back(Derivation);
+        
     }
 };

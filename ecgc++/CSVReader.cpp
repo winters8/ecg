@@ -30,7 +30,7 @@ std::vector<double> CSVReader::readColumnFromCSV(int columnIndex) {
             }
 
             double value;
-            std::cout << "datqa: " << cell;
+            std::cout << "data: " << cell;
             try {
                 value = std::stod(cell);
                 columnData.push_back(value);
