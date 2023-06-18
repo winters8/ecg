@@ -7,14 +7,15 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include "ecg.h"
 
 class CSVReader {
 public:
     CSVReader(const std::string& directory, char delimiter = ',') :
         directory(directory), delimiter(delimiter) {}
 
-    std::vector<double> readColumnFromCSV(int columnIndex);
-    void printColumn(const std::vector<double>& column);
+    std::vector<ECG> readColumnFromCSV(int columnIndex);
+    void printColumn(const std::vector<ECG>& column);
 
 private:
     std::string directory;

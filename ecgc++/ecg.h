@@ -1,21 +1,19 @@
 #include <iostream>
-#include <list>
+#include <vector>
 #include <string>
 #include "derivations.h"
 
 class ECG{
-private:
-    std::string ID;
-
 public:
-    std::list<Derivation> derivations;
+    std::string ID;
+    std::vector<Derivation> derivations;
     //Constructor ECG
-    ECG(const std::list<Derivation>& derivationList, const std::string& str){
-    derivations = derivationList;
+    ECG(const std::string& str,const std::vector<Derivation>& deriv){
     ID = str;
+    derivations=deriv;
     }
     //Getter derivations list
-    std::list<Derivation> getDerivations() const{
+    std::vector<Derivation> getDerivations() const{
         return derivations;
     }
     //Getter ECG ID
