@@ -19,7 +19,7 @@ class Derivation {
         }
         
         // Getter derivation data
-        std::vector<double> getdoubleList() const {
+        std::vector<double> getderivationdata() const {
             return derivation_data;
         }
 

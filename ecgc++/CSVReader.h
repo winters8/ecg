@@ -11,11 +11,12 @@
 
 class CSVReader {
 public:
+    
     CSVReader(const std::string& directory, char delimiter = ',') :
         directory(directory), delimiter(delimiter) {}
-
     std::vector<ECG> readColumnFromCSV(int columnIndex);
     void printColumn(const std::vector<ECG>& column);
+    int countTotalLinesInCSV(const std::string filename);
 
 private:
     std::string directory;
