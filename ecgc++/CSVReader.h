@@ -14,11 +14,12 @@ public:
         directory(directory), delimiter(delimiter) {}
 
     std::vector<ECG_singlederivation> readColumnFromCSV(int columnIndex);
-    //void printColumn(const std::vector<ECG_singlederivation>& ecg);
+    void printColumn(const std::vector<ECG_singlederivation>& ecg);
     int countTotalLinesInCSV(const std::string filename);
 
 private:
     std::string directory;
     char delimiter;
+    int columnIndex;
 };
 #endif  // CSVREADER_H

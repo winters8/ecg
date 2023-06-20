@@ -3,7 +3,6 @@
 
 namespace fs = std::filesystem;
 
-
 std::vector<ECG_singlederivation> CSVReader::readColumnFromCSV(int columnIndex) {
     std::vector<ECG_singlederivation> ECGList;
     int archivos_leidos=1;
@@ -22,36 +21,37 @@ std::vector<ECG_singlederivation> CSVReader::readColumnFromCSV(int columnIndex) 
         std::string line;
         std::getline(file, line);
         //if (lineas<2502){
-            int columarray=0;
-            int rowarray=0;
-            while (std::getline(file, line)) {
-                std::istringstream lineStream(line);
-                std::string cell;
-                for (int i = 0; i < columnIndex + 1; ++i) {
-                    if (!std::getline(lineStream, cell, delimiter)) {
-                        std::cout << "Error: Column index out of range." << std::endl;
-                        file.close();
-                        return ECGList;
-                    }
-                }
-                double value;
-                try {
-                    value = std::stod(cell);
-                    ArrayDataDerivation.put(columarray,rowarray,value);
-                    columarray++;
-                    //columnData.push_back(value);
-                } catch (const std::exception& e) {
-                    std::cout << "Error converting cell to double: " << cell << std::endl;
+        int columarray=0;
+        int rowarray=0;
+        while (std::getline(file, line)) {
+            std::istringstream lineStream(line);
+            std::string cell;
+            for (int i = 0; i < columnIndex + 1; ++i) {
+                if (!std::getline(lineStream, cell, delimiter)) {
+                    std::cout << "Error: Column index out of range." << std::endl;
+                    file.close();
+                    return ECGList;
                 }
             }
-            file.close();
-            const std::string derivation_name="II";
+            double value;
+            try {
+                value = std::stod(cell);
+                //std::cout << value<< " ";
+                ArrayDataDerivation.put(columarray,rowarray,value);
+                columarray++;
+                //columnData.push_back(value);
+            } catch (const std::exception& e) {
+                std::cout << "Error converting cell to double: " << cell << std::endl;
+            }
+        }
+            //file.close();
+            //const std::string derivation_name="II";
             //Derivation Derivation(columnData,deriation_name);
             //derivations.push_back(Derivation);
-            std::filesystem::path filePath(filename);
-            std::string fileECG = filePath.filename().string();
-            ECG_singlederivation ecg(fileECG,ArrayDataDerivation);
-            ECGList.push_back(ecg);
+            //std::filesystem::path filePath(filename);
+            //std::string fileECG = filePath.filename().string();
+            //ECG_singlederivation ecg(fileECG,ArrayDataDerivation);
+            //ECGList.push_back(ecg);
         //}
         /*else{
             bool shouldReadLine = true;
@@ -82,18 +82,29 @@ std::vector<ECG_singlederivation> CSVReader::readColumnFromCSV(int columnIndex) 
             }
             /*std::size_t length = columnData.size();
             std::cout << "tamaño colum data: "<<length;*/
-            file.close();
-            const std::string derivation_name="II";
-            //Derivation Derivation(columnData,derivation_name);
-            //derivations.push_back(Derivation);
-            std::filesystem::path filePath(filename);
-            std::string fileECG = filePath.filename().string();
+        file.close();
+        //const std::string derivation_name="II";
+        //Derivation Derivation(columnData,derivation_name);
+        //derivations.push_back(Derivation);
+        std::filesystem::path filePath(filename);
+        std::string fileECG = filePath.filename().string();
+        
+        try{
+           
             ECG_singlederivation ecg(fileECG,ArrayDataDerivation);
-            ecg.compute_autocorrelation_index(ArrayDataDerivation);
+            std::cout << "creado objeto ecg: ";
             ECGList.push_back(ecg);
-            archivos_leidos++;
+            
+        }catch (const std::exception& e) {
+                std::cout << "Error create objetc ecg: " << std::endl;
         }
-        return ECGList;
+        
+        //ecg.compute_autocorrelation_index(ArrayDataDerivation);
+        
+        archivos_leidos++;
+        std::cout << archivos_leidos;
+        }
+    return ECGList;
 }
         
    
@@ -111,7 +122,7 @@ int CSVReader::countTotalLinesInCSV(const std::string filename) {
     file.close();
     return lineCount;
 }
-/*
+
 void CSVReader::printColumn(const std::vector<ECG_singlederivation>& ecgs) {
     for (const auto& ecg : ecgs) {
         std::cout << "imprimiendo datos ecg";
@@ -121,5 +132,5 @@ void CSVReader::printColumn(const std::vector<ECG_singlederivation>& ecgs) {
             std::cout << derivation.v(i) << " ";
         }
     } 
-}*/
+}
 
