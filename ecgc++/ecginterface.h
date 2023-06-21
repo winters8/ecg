@@ -8,5 +8,5 @@ public:
         return " ";
     }
     virtual void setID_ECG(std::string id){}
-    virtual void setAutocorrelation_index(double index){}
+    //virtual void setAutocorrelation_index(double index){}
 };

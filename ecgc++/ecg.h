@@ -8,15 +8,15 @@
 #include "ecginterface.h"
 struct deriv{
         double valor[5010];
-
 };
 class ecg_singlederiv: public ecgInterface
 {
 private:
     std:: string ID;
     deriv A_;
-    double autocorrelationindex;
+    double correlationindex;
 public:
+    
     ecg_singlederiv(const std::string id, struct deriv A){
         ID=id;
         A_=A;
@@ -29,6 +29,11 @@ public:
     std::string getID_ECG() const override{
         return ID;
     };
+
+    double getCorrelationindex() const{
+        return correlationindex;
+    };
+    
     void setderiv(struct deriv A){
         A_=A;
     };
@@ -36,8 +41,8 @@ public:
     void setID_ECG(std::string id)override{
         ID=id;
     }
-    void setAutocorrelation_index(double index) override {
-        autocorrelationindex=index;
+    void setAutocorrelation_index(double index){
+        correlationindex=index;
     }
 };
 #endif

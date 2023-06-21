@@ -6,5 +6,6 @@ class NetworkProcesses{
 public:
     void PrintListECGS(std::vector<ecg_singlederiv> ECGList);
     };
+    
 
 #endif

@@ -1,13 +1,13 @@
+#include <cmath>
 #include "network_processes.h"
-
+struct Position {
+    int row;
+    int col;
+};
 void NetworkProcesses::PrintListECGS(std::vector<ecg_singlederiv> ECGList){
     for (const ecg_singlederiv& ecg: ECGList){
-       std::cout << ecg.getID_ECG();
-       deriv A;
-        A=ecg.getderiv();
-        int size = sizeof(A.valor) / sizeof(A.valor[0]);
-        for (int i=0; i<size; i++){
-            std::cout << A.valor[i]<<" "; 
-        }
+       std::cout << ecg.getID_ECG()<< "\n";
+        double correlation = ecg.getCorrelationindex();
+        std::cout << "indice de correlacion rescatado: " << correlation << "\n";
     }
 }
