@@ -23,30 +23,31 @@ std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory
         while (std::getline(file, line)) {
             std::istringstream lineStream(line);
             std::string cell;
-            for (int i = 0; i < columnIndex + 1; ++i) {
-                if (!std::getline(lineStream, cell, delimiter)) {
-                    std::cout << "Error: Column index out of range." << std::endl;
-                    file.close();
-                    return ECGVector;
+            double value;
+            for (int i = 0; i < columnIndex; i++) {
+                if (!std::getline(lineStream, cell, ',')) {
+                    break; // Invalid column number, or end of line reached
                 }
             }
-            double value;
-            try {
-                value = std::stod(cell);
-                A.valor[posarray]=value;
-                posarray++;
+            if (std::getline(lineStream, cell, ',')) {
+                try {
+                    value = std::stod(cell);
+                    A.valor[posarray]=value;
+                    posarray++;
                 //columnData.push_back(value);
-            } catch (const std::exception& e) {
-                std::cout << "Error converting cell to double: " << cell << std::endl;
+                } catch (const std::exception& e) {
+                    std::cout << "Error converting cell to double: " << cell << std::endl;
+                }
             }
-            file.close();
-            std::filesystem::path filePath(filename);
-            std::string fileECG = filePath.filename().string();
-            ECG.setID_ECG(fileECG);
-            ECG.setderiv(A);
-            ECGVector.push_back(ECG);
         }
+        file.close();
+        std::filesystem::path filePath(filename);
+        std::string fileECG = filePath.filename().string();
+        ECG.setID_ECG(fileECG);
+        ECG.setderiv(A);
+        ECGVector.push_back(ECG);
         files_reader++;
-    }
+        }
     return ECGVector;
 };
+    
