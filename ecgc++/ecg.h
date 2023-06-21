@@ -1,3 +1,5 @@
+#ifndef ECG_H
+#define ECG_H
 
 #include <iostream>
 #include <vector>
@@ -8,13 +10,30 @@ struct deriv{
         double valor[5010];
 
 };
-class ecg: public ecgInterface
+class ecg_singlederiv: public ecgInterface
 {
 private:
     std:: string ID;
     deriv A_;
 public:
-    ecg(std::string ID1,struct deriv A):ID(ID1),A_(A){};
-    ~ecg();
-};
+    ecg_singlederiv(const std::string id, struct deriv A){
+        ID=id;
+        A_=A;
+    };
 
+    deriv getderiv(){
+        return A_;
+    };
+    
+    std::string getID_ECG() override{
+        return ID;
+    };
+    void setderiv(struct deriv A){
+        A_=A;
+    };
+
+    void setID_ECG(std::string id)override{
+        ID=id;
+    }
+};
+#endif
