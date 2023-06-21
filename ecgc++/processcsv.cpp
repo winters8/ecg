@@ -43,7 +43,7 @@ std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory
         std::filesystem::path filePath(filename);
         std::string fileECG = filePath.filename().string();
         int size = sizeof(A.valor) / sizeof(A.valor[0]);
-        double correlation = CalculateCorrelationRRinterval(fileECG,A.valor,size);
+        double correlation = calculateNormalizedStandardDeviation(fileECG,A.valor,size);
         ECG.setAutocorrelation_index(correlation);
         ECG.setID_ECG(fileECG);
         ECG.setderiv(A);
@@ -53,32 +53,71 @@ std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory
     return ECGVector;
 };
 
-double ProcessCSV::CalculateCorrelationRRinterval(std::string fileECG,const double* array, int size){
-    double max = array[0];
-    int maxIndex = 0;
+double ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,const double* array,int size) {
+    double maxAmplitude = array[0];
+    if (size == 0) {
+        return 0.0;  // Return 0 if the data array is empty
+    } else{
+        for (size_t i = 1; i < size; ++i) {
+        if (array[i] > maxAmplitude) {
+            maxAmplitude = array[i];
+        }
+        }
 
-    // Find the maximum value and its index
-    for (int i = 1; i < size; i++) {
-        if (array[i] > max) {
-            max = array[i];
-            maxIndex = i;
+    }
+    
+    double threshold = 0.7 * maxAmplitude;
+    std::vector<size_t> rPoints;
+
+    // Find peaks above the threshold
+    for (size_t i = 1; i < size - 1; ++i) {
+        if (array[i] > threshold && array[i] > array[i - 1] && array[i] > array[i + 1]) {
+            rPoints.push_back(i);
         }
     }
-    // Calculate the correlation coefficient
-    double sumXY = 0.0;
-    double sumX = 0.0;
-    double sumY = 0.0;
-    double sumXSquared = 0.0;
-    double sumYSquared = 0.0;
 
-    for (int i = 0; i < size; i++) {
-        sumXY += (i - maxIndex) * (array[i] - max);
-        sumX += i - maxIndex;
-        sumY += array[i] - max;
-        sumXSquared += std::pow(i - maxIndex, 2);
-        sumYSquared += std::pow(array[i] - max, 2);
+    for (const auto& position : rPoints) {
+        std::cout << "posiciones: " << position << "\n ";
     }
 
-    double correlation = sumXY / std::sqrt(sumXSquared * sumYSquared);
-    return correlation;
-}
+
+    std::vector<double> distances;
+    for (size_t i = 1; i < rPoints.size(); ++i) {
+        distances.push_back(rPoints[i] - rPoints[i - 1]);
+    }
+
+   
+    double sum = 0.0;
+    for (const auto& distance : distances) {
+        sum += distance;
+    }
+
+    double mean = sum / distances.size();
+
+    double squaredDifferencesSum = 0.0;
+    for (const auto& distance : distances) {
+        squaredDifferencesSum += pow(distance - mean, 2);
+    }
+
+    double standardDeviation = sqrt(squaredDifferencesSum / (distances.size() - 1));
+
+    double normalizedStandardDeviation = standardDeviation / (size / 2.0);
+    std::cout << "indice desviacion normalizada: "<< normalizedStandardDeviation <<"\n";
+
+    double sumTimeIntervals = 0.0;
+    size_t numIntervals = rPoints.size() - 1;
+
+    // Calculate time intervals between consecutive R points
+    for (size_t i = 1; i < rPoints.size(); ++i) {
+        double timeInterval = static_cast<double>(rPoints[i] - rPoints[i - 1]) / 500;
+        sumTimeIntervals += timeInterval;
+    }
+
+    // Calculate average time duration per beat
+    double averageTimeInterval = sumTimeIntervals / numIntervals;
+
+    // Convert average time duration per beat to BPM
+    double bpm = 60.0 / averageTimeInterval;
+    std::cout << "BPM: "<< bpm <<"\n";
+    return normalizedStandardDeviation;
+};

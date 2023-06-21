@@ -15,6 +15,6 @@ public:
 
 std::vector<ecg_singlederiv> readColumnFromCSV(std::string directory,int columnIndex);
 
-double CalculateCorrelationRRinterval(std::string file,const double* array, int size);
+double calculateNormalizedStandardDeviation(std::string fileECG,const double* array, int size);
 };
 #endif
