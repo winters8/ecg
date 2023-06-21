@@ -1,30 +1,41 @@
-#ifndef ECG_H
-#define ECG_H
+#ifndef ECG_H_
+#define ECG_H_
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cmath>
 #include "SparseArray.h"
-class ECG_singlederivation
-{      
-    public:
-        std::string ID;
-        NetworkCommunities::SparseArray ArrayDataDerivation;
-        /*
-        ECG_singlederivation(std::string str,NetworkCommunities::SparseArray Array)
-        :ID(str),ArrayDataDerivation(Array){ };
-        string getID_ECG()const {
+class ecgInterface
+{
+private:
+    std::string ID;
+    double autocorrelation_index;
+    NetworkCommunities::SparseArray thisArrayDataDerivation;
+public:
+    ecgInterface(const std::string& str,NetworkCommunities::SparseArray ArrayDataDerivation): thisArrayDataDerivation(ArrayDataDerivation)
+    {
+            ID = str;
+    };
+    NetworkCommunities::SparseArray getDerivations(){
+            return thisArrayDataDerivation;
+    };
+    string getID_ECG() {
             return ID;
-        };
-        NetworkCommunities::SparseArray getDerivation_ECG()const {
-            return ArrayDataDerivation;
-        };*/
-        //Set autocorrelation index
-        /*double compute_autocorrelation_index(NetworkCommunities::SparseArray ArrayDataDerivation) const {
-            int n = ArrayDataDerivation.get_nEdges();
-        int lag=40;// 250 Hz = 1 / 250 s = 40 samples
+    }
+    virtual double compute_autocorrelation_index(NetworkCommunities::SparseArray ArrayDataDerivation) = 0;
+    virtual std::vector<double> detectRRIntervals(const std::vector<double>& ecgData, int samplingRate)=0;
+};
+class ECG_singlederivation : public ecgInterface
+{
+    public:
         
+        ECG_singlederivation(const std::string& str,NetworkCommunities::SparseArray ArrayDataDerivation):ecgInterface(str,ArrayDataDerivation){}
+        //Set autocorrelation index
+        double compute_autocorrelation_index(NetworkCommunities::SparseArray ArrayDataDerivation) override {
+        int n = ArrayDataDerivation.get_nEdges();
+        int lag=40;// 250 Hz = 1 / 250 s = 40 samples
+        /*
             double sum = 0.0;
 
             // Calculate the mean of the data
@@ -48,11 +59,11 @@ class ECG_singlederivation
             variance /= n;
             double autocorrelation = autocovariance / variance;
             autocorrelation_index=autocorrelation;
-            std::cout << "aurocorrelation_ index: "<< autocorrelation; 
-    return n;
-        };
-        std::vector<double> detectRRIntervals(const std::vector<double>& ecgData, int samplingRate) const{
-            std::vector<double> rrIntervals;
+            std::cout << "aurocorrelation_ index: "<< autocorrelation; */
+            return n;
+    }
+    std::vector<double> detectRRIntervals(const std::vector<double>& ecgData, int samplingRate) override  {
+        std::vector<double> rrIntervals;
         
         // Assuming each value in ecgData represents the amplitude of the ECG signal
 
@@ -74,6 +85,6 @@ class ECG_singlederivation
         }
 
         return rrIntervals;
-        };*/
+    }
 };
 #endif
