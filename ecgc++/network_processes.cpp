@@ -79,8 +79,9 @@ NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<e
             {
             CosinesIndexAll.insert(CosinesIndexAll.end(), cosineprivate.begin(),cosineprivate.end());
             }
-            std::cout << "tamaño Array: "<<Array.get_nEdges();
+           
     }
+    std::cout << "tamaño Array: "<<Array.get_nEdges();
     return Array;
 };
 
