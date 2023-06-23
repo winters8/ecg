@@ -61,6 +61,7 @@ class Network {
     * @param fileName The file to read to define the network
     */
    Network (NetworkCommunities::SparseArray Array){
+    std::cout << "tamaño Array: "<<Array.get_nEdges();
      Edge e;
      ifstream inFile;
      unsigned long aux;
