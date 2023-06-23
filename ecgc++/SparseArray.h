@@ -67,6 +67,7 @@ namespace NetworkCommunities {
        * weight of the edge.
        */
       struct element{
+        std::string ID;
         int row;
         int column;
         double value;
@@ -97,8 +98,9 @@ namespace NetworkCommunities {
        * @param j The column of the element
        * @param value The value of the (i, j) element
        */
-      void put (int i, int j, double value){
+      void put (int i, int j, double value,std::string ID){
         index++;
+        matrix[index].ID=ID;
         matrix[index].row = i;
         matrix[index].column = j;
         matrix[index].value = value;

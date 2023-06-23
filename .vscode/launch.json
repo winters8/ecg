@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/plati/git/ECG/ecg/ecgc++",
-      "program": "c:/Users/plati/git/ECG/ecg/ecgc++/build/Debug/outDebug",
+      "cwd": "c:/Users/plati/git/ecg/ecg/ecgc++",
+      "program": "c:/Users/plati/git/ecg/ecg/ecgc++/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

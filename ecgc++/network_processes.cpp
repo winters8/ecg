@@ -42,7 +42,7 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                     }
                 
                     double sqrtA = std::sqrt(sumOfSquaresaA);
-                    std::cout << "sqrt A: " << sqrtA <<"\n";
+                    
 
                 for (size_t j = 1; j < ECGList.size(); ++j)
                     {
@@ -69,7 +69,7 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         //std::cout <<"indice comparativo: " << compartiva.cosineindez<<"\n";
                         //std::cout << "division: "<< compartiva.cosineindez <<"\n";
                         cosineprivate.push_back(compartiva);
-                        std::cout <<"el archivo: " <<ecga.getID_ECG()<< " en el hilo: "<< myThreadID<< " ha terminado\n";
+                        
                     }
             
             }
