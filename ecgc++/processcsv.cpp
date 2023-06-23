@@ -2,7 +2,9 @@
 #include "processcsv.h"
 #include "network_processes.h"
 namespace fs = std::filesystem;
+
 std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory,int columnIndex) {
+    indexsECG indices;
     std::vector<ecg_singlederiv> ECGVector;
     int files_reader=1;
     deriv A;
@@ -43,8 +45,9 @@ std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory
         std::filesystem::path filePath(filename);
         std::string fileECG = filePath.filename().string();
         int size = sizeof(A.valor) / sizeof(A.valor[0]);
-        double correlation = calculateNormalizedStandardDeviation(fileECG,A.valor,size);
-        ECG.setAutocorrelation_index(correlation);
+        indices = calculateNormalizedStandardDeviation(fileECG,A.valor,size);
+        ECG.setAutocorrelation_index(indices.normalizedStandardDeviation);
+        ECG.setBpm_index(indices.bpm);
         ECG.setID_ECG(fileECG);
         ECG.setderiv(A);
         ECGVector.push_back(ECG);
@@ -53,17 +56,13 @@ std::vector<ecg_singlederiv> ProcessCSV::readColumnFromCSV(std::string directory
     return ECGVector;
 };
 
-double ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,const double* array,int size) {
+indexsECG ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,const double* array,int size) {
+    indexsECG indicesreturn;
     double maxAmplitude = array[0];
-    if (size == 0) {
-        return 0.0;  // Return 0 if the data array is empty
-    } else{
-        for (size_t i = 1; i < size; ++i) {
+    for (size_t i = 1; i < size; ++i) {
         if (array[i] > maxAmplitude) {
             maxAmplitude = array[i];
         }
-        }
-
     }
     
     double threshold = 0.7 * maxAmplitude;
@@ -75,11 +74,11 @@ double ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,cons
             rPoints.push_back(i);
         }
     }
-
+/*
     for (const auto& position : rPoints) {
         std::cout << "posiciones: " << position << "\n ";
     }
-
+*/
 
     std::vector<double> distances;
     for (size_t i = 1; i < rPoints.size(); ++i) {
@@ -102,8 +101,9 @@ double ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,cons
     double standardDeviation = sqrt(squaredDifferencesSum / (distances.size() - 1));
 
     double normalizedStandardDeviation = standardDeviation / (size / 2.0);
+    indicesreturn.normalizedStandardDeviation=normalizedStandardDeviation;
     std::cout << "indice desviacion normalizada: "<< normalizedStandardDeviation <<"\n";
-
+    
     double sumTimeIntervals = 0.0;
     size_t numIntervals = rPoints.size() - 1;
 
@@ -118,6 +118,27 @@ double ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,cons
 
     // Convert average time duration per beat to BPM
     double bpm = 60.0 / averageTimeInterval;
-    std::cout << "BPM: "<< bpm <<"\n";
-    return normalizedStandardDeviation;
+    indicesreturn.bpm=bpm;
+    return indicesreturn;
+};
+
+int ProcessCSV::WriteCSV(std::vector<ComparativeCosine> comparatives){
+    std::ofstream file("data.csv");
+
+    if (file.is_open())
+    {
+        file << "IDA, IDB, weith\n";
+        for(const ComparativeCosine comparative: comparatives){
+            file << comparative.IDA <<","<<comparative.IDB<<","<<comparative.cosineindez<<"\n";
+        }
+        // Close the file
+        file.close();
+        std::cout << "CSV file created successfully." << std::endl;
+    }
+    else
+    {
+        std::cerr << "Failed to create the CSV file." << std::endl;
+    }
+
+    return 0;
 };

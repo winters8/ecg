@@ -15,6 +15,7 @@ private:
     std:: string ID;
     deriv A_;
     double correlationindex;
+    double BPM;
 public:
     
     ecg_singlederiv(const std::string id, struct deriv A){
@@ -43,6 +44,9 @@ public:
     }
     void setAutocorrelation_index(double index){
         correlationindex=index;
+    }
+    void setBpm_index(double index){
+        BPM=index;
     }
 };
 #endif
