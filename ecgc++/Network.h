@@ -14,7 +14,7 @@
 #include <vector>
 #include <queue>
 #include <math.h>
-
+#include "SparseArray.h"
 using namespace std;
 
 /**
@@ -37,8 +37,10 @@ class Network {
   // Private class members
   private:
     struct Edge {
-      unsigned long origin;       // First node
-      unsigned long destination;  // Second node
+      unsigned int originumber;
+      unsigned int destinationnumber;
+      std::string origin;       // First node
+      std::string destination;  // Second node
       double weight;              // Edge weight
     };
 
@@ -58,7 +60,7 @@ class Network {
     * maximum and minimum edge weight values are determined.
     * @param fileName The file to read to define the network
     */
-   Network (string fileName){
+   Network (NetworkCommunities::SparseArray Array){
      Edge e;
      ifstream inFile;
      unsigned long aux;
@@ -67,37 +69,43 @@ class Network {
      thrshld = 1.0;
      density = 1.0;
 
-     inFile.open(fileName);
-     inFile >> nNodes;
-     inFile >> nEdges;
-     cout << "#Nodes: " << nNodes << ", #Edges: " << nEdges << endl << endl;
+     //inFile.open(fileName);
+     //inFile >> nNodes;
+     //inFile >> nEdges;
+     //cout << "#Nodes: " << nNodes << ", #Edges: " << nEdges << endl << endl;
 
      nodes = new vector<Edge>[nNodes];
 
      // Reading first edge and initializing wMax and wMin
-     inFile >> e.origin;
+     /*inFile >> e.origin;
      inFile >> e.destination;
-     inFile >> w;
-     e.weight = wMax = wMin = w;;
-     nodes[e.origin].push_back(e);
-     nodes[e.destination].push_back(e);
+     inFile >> w;*/
+     e.origin=Array.IDA(0);
+     e.originumber=Array.r(0);
+     e.destination=Array.c(0);
+     e.destination=Array.IDB(0);
+     e.weight = wMax = wMin = w;
+     nodes[e.originumber].push_back(e);
+     nodes[e.destinationnumber].push_back(e);
 
      aux = 1;
 
      // Prime read
-     inFile >> e.origin;
+     /*inFile >> e.origin;
      inFile >> e.destination;
-     inFile >> w;
-     while (!inFile.eof()){
-       e.weight = w;
-       nodes[e.origin].push_back(e);
-       nodes[e.destination].push_back(e);
+     inFile >> w;*/
+     for (int i=1;i<Array.get_nEdges();i++){
+       e.weight =w;
+       nodes[e.originumber].push_back(e);
+       nodes[e.destinationnumber].push_back(e);
        if (w > wMax) wMax = w;
        if (w < wMin) wMin = w;
-       inFile >> e.origin;
-       inFile >> e.destination;
-       inFile >> w;
-       aux++;    // Counting the actual number of edges read
+      e.origin=Array.IDA(i);
+      e.originumber=Array.r(i);
+      e.destination=Array.c(i);
+      e.destination=Array.IDB(i);
+      w=Array.v(i);
+      aux++;    // Counting the actual number of edges read
      }
      inFile.close();
 
@@ -128,10 +136,10 @@ class Network {
    * @return The node adjacent to i along e
    */
    unsigned long adjacent (unsigned long i, Edge e) {
-     if (e.origin == i)
-       return e.destination;
+     if (e.originumber == i)
+       return e.destinationnumber;
      else
-       return e.origin;
+       return e.originumber;
    }
 
    
@@ -228,30 +236,30 @@ class Network {
      return thrshld;
    }
 
-   double newNetwork(string fileName, double thrd){
-     ifstream inFile;
+   double newNetwork(NetworkCommunities::SparseArray Array, double thrd){
+     //ifstream inFile;
      ofstream outFile;
-     unsigned long nNod, nEdg, o, d, n;
+     unsigned long nNod, nEdg ,n;
+     std::string o, d;
      double w;
      nEdgesNew = 0;
-     inFile.open(fileName);
+     //inFile.open(fileName);
      outFile.open("./src/newNetwork.csv");
-     inFile >> nNod;
-     outFile << nNod << endl;
-     inFile >> nEdg;
+     //inFile >> nNod;
+     //outFile << nNod << endl;
+     //inFile >> nEdg;
 
      n = 0;
      for (unsigned long i = 0; i< nEdg; i++){
-       inFile >> o;
-       inFile >> d;
-       inFile >> w;
+       o=Array.r(i);
+       d=Array.c(i);
+       w=Array.v(0);
        if (w >= thrd) {
          nEdgesNew++;
          outFile << o << " " << d << " " << w << endl;
          n++;
        }
      }
-     inFile.close();
      outFile.close();
 
      // Edge density

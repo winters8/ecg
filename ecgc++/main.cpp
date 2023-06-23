@@ -3,7 +3,7 @@
 
 #include "processcsv.h"
 #include "network_processes.h"
-
+#include "Network.h"
 using namespace std;
 NetworkProcesses processes;
 ProcessCSV write;
@@ -12,10 +12,14 @@ int main(){
     ProcessCSV reader;
     int columindex=1;
     std::vector<ecg_singlederiv> ECGList = reader.readColumnFromCSV(path,columindex);
-    std::vector<ComparativeCosine> comparatives = processes.cosineSimilarity(ECGList);
+     NetworkCommunities::SparseArray Array = processes.cosineSimilarity(ECGList);
+     Network ejem(Array);
+    double thrs;
+    thrs = ejem.threshold();
+    ejem.newNetwork(Array,thrs);
 // Replace 2 with the desired column index
     // Print the column data
     //processes.PrintListECGS(ECGList);
-    write.WriteCSV(comparatives);
+    //write.WriteCSV(Array);
     return 0;
 };

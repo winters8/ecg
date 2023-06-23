@@ -67,7 +67,8 @@ namespace NetworkCommunities {
        * weight of the edge.
        */
       struct element{
-        std::string ID;
+        std::string IDA;
+        std::string IDB;
         int row;
         int column;
         double value;
@@ -98,9 +99,10 @@ namespace NetworkCommunities {
        * @param j The column of the element
        * @param value The value of the (i, j) element
        */
-      void put (int i, int j, double value,std::string ID){
+      void put (int i, int j, double value,std::string IDA,std::string IDB){
         index++;
-        matrix[index].ID=ID;
+        matrix[index].IDA=IDA;
+        matrix[index].IDB=IDB;
         matrix[index].row = i;
         matrix[index].column = j;
         matrix[index].value = value;
@@ -139,7 +141,12 @@ namespace NetworkCommunities {
         return matrix[i].value;
       }      
       
-      
+      std::string IDA (int i){
+        return matrix[i].IDA;
+      }
+      std::string IDB (int i){
+        return matrix[i].IDB;
+      }
       /**
        * Method for getting the number of edges (non-zero elements) in the 
        * network

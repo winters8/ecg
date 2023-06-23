@@ -1,6 +1,7 @@
 #include <cmath>
 #include <omp.h>
 #include "network_processes.h"
+
 struct Position {
     int row;
     int col;
@@ -14,7 +15,8 @@ void NetworkProcesses::PrintListECGS(std::vector<ecg_singlederiv> ECGList){
     }
 };
 // Function to calculate the dot product of two arrays
-std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
+NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
+    NetworkCommunities::SparseArray Array(ECGList.size());
     std::vector<ComparativeCosine> CosinesIndexAll;
     deriv A;
     deriv B;
@@ -34,7 +36,6 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                 double valuea;
                 double sumOfSquaresaA = 0.0;
                 std::size_t sizea = sizeof(A.valor) / sizeof(A.valor[0]);
-
                 for (size_t z=0; z< sizea; ++z)
                     {
                         valuea=A.valor[z];
@@ -69,7 +70,8 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         //std::cout <<"indice comparativo: " << compartiva.cosineindez<<"\n";
                         //std::cout << "division: "<< compartiva.cosineindez <<"\n";
                         cosineprivate.push_back(compartiva);
-                        
+                        Array.put(i,j,division,ecga.getID_ECG(),ecgb.getID_ECG());
+                        std::cout << "añadido puesto: "<< i <<" + " << j << " del ID " << ecga.getID_ECG()<< "\n";                     
                     }
             
             }
@@ -77,6 +79,8 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
             {
             CosinesIndexAll.insert(CosinesIndexAll.end(), cosineprivate.begin(),cosineprivate.end());
             }
+            std::cout << "tamaño Array: "<<Array.get_nEdges();
     }
-    return CosinesIndexAll;
+    return Array;
 };
+
