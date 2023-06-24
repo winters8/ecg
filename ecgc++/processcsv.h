@@ -11,6 +11,8 @@
 struct ComparativeCosine{
         std::string IDA;
         std::string IDB;
+        int i;
+        int j;
         double cosineindez;
 };
 struct indexsECG{

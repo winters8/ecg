@@ -74,7 +74,7 @@ namespace NetworkCommunities {
         double value;
       };
       
-      element* matrix; // Array of elements
+      element** matrix; // Array of elements
       int M;           // Number of edges added to the network
       double sum;      // Sum of squared values (weights) added to the array
       int index;       // Current index of array matrix
@@ -89,7 +89,10 @@ namespace NetworkCommunities {
         M = n; 
         sum = 0.0;
         index = -1;
-        matrix = new element[M]; 
+        matrix = new element*[M];
+        for (int i = 0; i < M; ++i) {
+        matrix[i] = new element[M];
+    } 
       }
       
      
@@ -101,11 +104,11 @@ namespace NetworkCommunities {
        */
       void put (int i, int j, double value,std::string IDA,std::string IDB){
         index++;
-        matrix[index].IDA=IDA;
-        matrix[index].IDB=IDB;
-        matrix[index].row = i;
-        matrix[index].column = j;
-        matrix[index].value = value;
+        matrix[i][j].IDA=IDA;
+        matrix[i][j].IDB=IDB;
+        matrix[i][j].row = i;
+        matrix[i][j].column = j;
+        matrix[i][j].value = value;
         sum += value * value;
       }
       
@@ -116,7 +119,7 @@ namespace NetworkCommunities {
        * @return The row of the ith element (edge)
        */
       int r (int i){
-        return matrix[i].row;
+        return matrix[i][0].row;
       }
       
       
@@ -127,7 +130,7 @@ namespace NetworkCommunities {
        * @return The column of the ith element (edge)
        */
       int c (int i){
-        return matrix[i].column;
+        return matrix[0][i].column;
       }
       
 
@@ -137,15 +140,15 @@ namespace NetworkCommunities {
        * @param i The edge index of the element
        * @return The value (weight) of the ith element (edge)
        */
-      double v (int i){
-        return matrix[i].value;
+      double v (int i,int j){
+        return matrix[i][j].value;
       }      
       
       std::string IDA (int i){
-        return matrix[i].IDA;
+        return matrix[i][0].IDA;
       }
       std::string IDB (int i){
-        return matrix[i].IDB;
+        return matrix[0][i].IDB;
       }
       /**
        * Method for getting the number of edges (non-zero elements) in the 

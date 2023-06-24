@@ -61,7 +61,7 @@ class Network {
     * @param fileName The file to read to define the network
     */
    Network (NetworkCommunities::SparseArray Array){
-    std::cout << "tamaño Array: "<<Array.get_nEdges();
+    std::cout<< "Procesando Array\n";
      Edge e;
      ifstream inFile;
      unsigned long aux;
@@ -96,27 +96,33 @@ class Network {
      inFile >> e.destination;
      inFile >> w;*/
      for (int i=1;i<Array.get_nEdges();i++){
-       e.weight =w;
-       nodes[e.originumber].push_back(e);
-       nodes[e.destinationnumber].push_back(e);
-       if (w > wMax) wMax = w;
-       if (w < wMin) wMin = w;
-      e.origin=Array.IDA(i);
-      e.originumber=Array.r(i);
-      e.destination=Array.c(i);
-      e.destination=Array.IDB(i);
-      w=Array.v(i);
+      for(int j=1;j<Array.get_nEdges();j++){
+        if (i==j){
+          continue;
+        }else{
+          e.weight =w;
+          nodes[e.originumber].push_back(e);
+          nodes[e.destinationnumber].push_back(e);
+          if (w > wMax) wMax = w;
+          if (w < wMin) wMin = w;
+        e.origin=Array.IDA(i);
+        e.originumber=Array.r(i);
+        e.destination=Array.c(i);
+        e.destination=Array.IDB(i);
+        w=Array.v(i,j);
+        }
+      }
       aux++;    // Counting the actual number of edges read
      }
      inFile.close();
 
      if (aux != nEdges) {
-       cout << " Number of edges read: " << aux << " number expected: "
+       std::cout << " Number of edges read: " << aux << " number expected: "
             << nEdges <<". ERROR in data, check edges." << endl;
        exit(0);
      }
 
-     cout << "Max weight: " << wMax << ", Min weight: " << wMin << endl;
+     std::cout << "Max weight: " << wMax << ", Min weight: " << wMin << endl;
      /*
      for (unsigned long i =0; i < nNodes; i++){
        cout << i <<": "<< endl;
@@ -156,6 +162,7 @@ class Network {
    * @return The threshold edge value where the network is still connected.
    */
    double threshold(){
+    std::cout << "procesando threshold \n";
      double delta, wIni, wEnd, epsilon;
      double *thresholds;
      int j, k, nIter;
@@ -178,10 +185,10 @@ class Network {
 
      wIni = wMin;
      wEnd = wMax;
-     cout << endl << "Threshold iterations: " << nIter << endl << endl;
+     std::cout << endl << "Threshold iterations: " << nIter << endl << endl;
 
      for (int i = 0; i < nIter; i++) {
-       cout << "Iteration: " << i << endl;
+       std::cout << "Iteration: " << i << endl;
        allConnected = true;
        goOn = true;
        delta = (wEnd - wIni) / (nCores + 1); // Computing increment in this iteration
@@ -214,8 +221,8 @@ class Network {
          }
        } // End of parallel for
 
-       cout << "Thresholds     #Nodes" << endl;
-       for (j = 0; j < nCores; j++) cout << thresholds[j] << "       "
+       std::cout << "Thresholds     #Nodes" << endl;
+       for (j = 0; j < nCores; j++) std::cout << thresholds[j] << "       "
                                          << nodesConect[j] << endl;
        for (j = 0; j < nCores && goOn; j++){
          if (nodesConect[j] != nNodes) {
@@ -229,7 +236,7 @@ class Network {
          wEnd = wMax;
          wIni = thresholds[nCores - 1];
        }
-       cout << "wIni, wEnd: " << wIni << " " << wEnd << endl << endl;
+       std::cout << "wIni, wEnd: " << wIni << " " << wEnd << endl << endl;
      }
 
      thrshld = wIni; // With a threshold > than this the network is unconnected
@@ -238,6 +245,7 @@ class Network {
    }
 
    double newNetwork(NetworkCommunities::SparseArray Array, double thrd){
+    std::cout << "procesando new network \n";
      //ifstream inFile;
      ofstream outFile;
      unsigned long nNod, nEdg ,n;
@@ -252,14 +260,20 @@ class Network {
 
      n = 0;
      for (unsigned long i = 0; i< nEdg; i++){
-       o=Array.r(i);
-       d=Array.c(i);
-       w=Array.v(0);
-       if (w >= thrd) {
-         nEdgesNew++;
-         outFile << o << " " << d << " " << w << endl;
-         n++;
+      for(int j=0;j<Array.get_nEdges();j++){
+        if (i==j){
+          continue;
+        }else{
+          o=Array.r(i);
+          d=Array.c(i);
+          w=Array.v(i,j);
+          if (w >= thrd) {
+            nEdgesNew++;
+            outFile << o << " " << d << " " << w << endl;
+            n++;
+          }
        }
+     }
      }
      outFile.close();
 

@@ -13,7 +13,7 @@ int main(){
     int columindex=1;
     std::vector<ecg_singlederiv> ECGList = reader.readColumnFromCSV(path,columindex);
      NetworkCommunities::SparseArray Array = processes.cosineSimilarity(ECGList);
-     Network ejem(Array);
+    Network ejem(Array);
     double thrs;
     thrs = ejem.threshold();
     ejem.newNetwork(Array,thrs);

@@ -67,11 +67,12 @@ NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<e
                         double producctoAB = sqrtA * sqrtB;
                         double division = product/producctoAB;
                         compartiva.cosineindez= division;
+                        compartiva.i=i;
+                        compartiva.j=j;
+
                         //std::cout <<"indice comparativo: " << compartiva.cosineindez<<"\n";
                         //std::cout << "division: "<< compartiva.cosineindez <<"\n";
-                        cosineprivate.push_back(compartiva);
-                        Array.put(i,j,division,ecga.getID_ECG(),ecgb.getID_ECG());
-                        std::cout << "añadido puesto: "<< i <<" + " << j << " del ID " << ecga.getID_ECG()<< "\n";                     
+                        cosineprivate.push_back(compartiva);                    
                     }
             
             }
@@ -81,7 +82,12 @@ NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<e
             }
            
     }
-    std::cout << "tamaño Array: "<<Array.get_nEdges();
+    std::cout <<"Generando Array\n";
+    for (ComparativeCosine comp: CosinesIndexAll){
+        Array.put(comp.i,comp.j,comp.cosineindez,comp.IDA,comp.IDB);
+        std::cout <<"añadido "<<comp.IDA <<" y "<< comp.IDB <<"\n";
+    }
+     std::cout <<"array generada\n";
     return Array;
 };
 
