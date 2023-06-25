@@ -20,6 +20,7 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
     std::vector<ComparativeCosine> CosinesIndexAll;
     deriv A;
     deriv B;
+    
     #pragma omp parallel
     {
         int threadID = omp_get_thread_num();

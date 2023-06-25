@@ -11,9 +11,11 @@ int main(){
     string path = "C:/Users/plati/git/ECG/ecg/ECGDataDenoised";
     ProcessCSV reader;
     int columindex=1;
+    
     std::vector<ecg_singlederiv> ECGList = reader.readColumnFromCSV(path,columindex);
+    int size=ECGList.size();
     std::vector<ComparativeCosine> CosinesAll = processes.cosineSimilarity(ECGList);
-    Network ejem(CosinesAll);
+    Network ejem(CosinesAll,size);
     double thrs;
     thrs = ejem.threshold();
     ejem.newNetwork(CosinesAll,thrs);

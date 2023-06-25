@@ -60,16 +60,17 @@ class Network {
     * maximum and minimum edge weight values are determined.
     * @param fileName The file to read to define the network
     */
-   Network (std::vector<ComparativeCosine> CosinesAll){
+   Network (std::vector<ComparativeCosine> CosinesAll,int size){
     std::cout<< "Procesando Array\n";
      Edge e;
-     ifstream inFile;
+     //ifstream inFile;
      unsigned long aux;
      double w;
      nNodes = nEdges = nEdgesNew = 0;
      thrshld = 1.0;
      density = 1.0;
-
+      nNodes=size;
+      nEdges=CosinesAll.size();
      //inFile.open(fileName);
      //inFile >> nNodes;
      //inFile >> nEdges;
@@ -108,7 +109,7 @@ class Network {
           w=CosinesAll[i].cosineindez;
       aux++;    // Counting the actual number of edges read
      }
-     inFile.close();
+     //inFile.close();
 
      if (aux != nEdges) {
        std::cout << " Number of edges read: " << aux << " number expected: "
