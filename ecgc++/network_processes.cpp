@@ -15,8 +15,8 @@ void NetworkProcesses::PrintListECGS(std::vector<ecg_singlederiv> ECGList){
     }
 };
 // Function to calculate the dot product of two arrays
-NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
-    NetworkCommunities::SparseArray Array(ECGList.size());
+std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
+    //NetworkCommunities::SparseArray Array(ECGList.size());
     std::vector<ComparativeCosine> CosinesIndexAll;
     deriv A;
     deriv B;
@@ -82,12 +82,14 @@ NetworkCommunities::SparseArray NetworkProcesses::cosineSimilarity(std::vector<e
             }
            
     }
+    /*
     std::cout <<"Generando Array\n";
     for (ComparativeCosine comp: CosinesIndexAll){
         Array.put(comp.i,comp.j,comp.cosineindez,comp.IDA,comp.IDB);
         std::cout <<"añadido "<<comp.IDA <<" y "<< comp.IDB <<"\n";
     }
      std::cout <<"array generada\n";
-    return Array;
+     */
+    return CosinesIndexAll;
 };
 

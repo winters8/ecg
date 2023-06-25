@@ -10,7 +10,7 @@ class NetworkProcesses{
 public:
     void PrintListECGS(std::vector<ecg_singlederiv> ECGList);
    
-    NetworkCommunities::SparseArray cosineSimilarity(std::vector<ecg_singlederiv>& ECGList);
+    std::vector<ComparativeCosine> cosineSimilarity(std::vector<ecg_singlederiv>& ECGList);
 
  };
 #endif

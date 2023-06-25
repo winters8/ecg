@@ -12,11 +12,11 @@ int main(){
     ProcessCSV reader;
     int columindex=1;
     std::vector<ecg_singlederiv> ECGList = reader.readColumnFromCSV(path,columindex);
-     NetworkCommunities::SparseArray Array = processes.cosineSimilarity(ECGList);
-    Network ejem(Array);
+    std::vector<ComparativeCosine> CosinesAll = processes.cosineSimilarity(ECGList);
+    Network ejem(CosinesAll);
     double thrs;
     thrs = ejem.threshold();
-    ejem.newNetwork(Array,thrs);
+    ejem.newNetwork(CosinesAll,thrs);
 // Replace 2 with the desired column index
     // Print the column data
     //processes.PrintListECGS(ECGList);

@@ -60,7 +60,7 @@ class Network {
     * maximum and minimum edge weight values are determined.
     * @param fileName The file to read to define the network
     */
-   Network (NetworkCommunities::SparseArray Array){
+   Network (std::vector<ComparativeCosine> CosinesAll){
     std::cout<< "Procesando Array\n";
      Edge e;
      ifstream inFile;
@@ -81,13 +81,13 @@ class Network {
      /*inFile >> e.origin;
      inFile >> e.destination;
      inFile >> w;*/
-     e.origin=Array.IDA(0);
-     e.originumber=Array.r(0);
-     e.destination=Array.c(0);
-     e.destination=Array.IDB(0);
-     e.weight = wMax = wMin = w;
-     nodes[e.originumber].push_back(e);
-     nodes[e.destinationnumber].push_back(e);
+     e.origin=CosinesAll[0].IDA;
+     e.originumber=CosinesAll[0].i;
+     e.destinationnumber=CosinesAll[0].j;
+     e.destination=CosinesAll[0].IDB;
+     e.weight = wMax = wMin = w=CosinesAll[0].cosineindez;
+     //nodes[e.originumber].push_back(e);
+     //nodes[e.destinationnumber].push_back(e);
 
      aux = 1;
 
@@ -95,23 +95,17 @@ class Network {
      /*inFile >> e.origin;
      inFile >> e.destination;
      inFile >> w;*/
-     for (int i=1;i<Array.get_nEdges();i++){
-      for(int j=1;j<Array.get_nEdges();j++){
-        if (i==j){
-          continue;
-        }else{
+     for (int i=1;i<CosinesAll.size();i++){
           e.weight =w;
           nodes[e.originumber].push_back(e);
           nodes[e.destinationnumber].push_back(e);
           if (w > wMax) wMax = w;
           if (w < wMin) wMin = w;
-        e.origin=Array.IDA(i);
-        e.originumber=Array.r(i);
-        e.destination=Array.c(i);
-        e.destination=Array.IDB(i);
-        w=Array.v(i,j);
-        }
-      }
+          e.origin=CosinesAll[i].IDA;
+          e.originumber=CosinesAll[i].i;
+          e.destinationnumber=CosinesAll[i].j;
+          e.destination=CosinesAll[0].IDB;
+          w=CosinesAll[i].cosineindez;
       aux++;    // Counting the actual number of edges read
      }
      inFile.close();
@@ -244,7 +238,7 @@ class Network {
      return thrshld;
    }
 
-   double newNetwork(NetworkCommunities::SparseArray Array, double thrd){
+   double newNetwork(std::vector<ComparativeCosine> CosinesAll, double thrd){
     std::cout << "procesando new network \n";
      //ifstream inFile;
      ofstream outFile;
@@ -257,24 +251,18 @@ class Network {
      //inFile >> nNod;
      //outFile << nNod << endl;
      //inFile >> nEdg;
-
+      nEdg=CosinesAll.size();
      n = 0;
      for (unsigned long i = 0; i< nEdg; i++){
-      for(int j=0;j<Array.get_nEdges();j++){
-        if (i==j){
-          continue;
-        }else{
-          o=Array.r(i);
-          d=Array.c(i);
-          w=Array.v(i,j);
-          if (w >= thrd) {
-            nEdgesNew++;
-            outFile << o << " " << d << " " << w << endl;
-            n++;
-          }
-       }
-     }
-     }
+      o=CosinesAll[i].IDA;
+      d=CosinesAll[i].IDB;
+      w=CosinesAll[i].cosineindez;
+      if (w >= thrd) {
+        nEdgesNew++;
+        outFile << o << " " << d << " " << w << endl;
+        n++;
+      }
+    }
      outFile.close();
 
      // Edge density
