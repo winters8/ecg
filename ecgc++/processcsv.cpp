@@ -24,11 +24,6 @@ std::vector<ecg_singlederiv> ProcessCSV::readNormalizeCSV(std::string directory)
         while (std::getline(file, line)) {
             std::istringstream lineStream(line);
             double value;
-            /*for (int i = 0; i < columnIndex; i++) {
-                if (!std::getline(lineStream, cell, ',')) {
-                    break; // Invalid column number, or end of line reached
-                }
-            }*/
                 try {
                     value = std::stod(line);
                     A.valor[posarray]=value;
@@ -86,7 +81,7 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
                     value = std::stod(cell);
                     A.valor[posarray]=value;
                     posarray++;
-                //columnData.push_back(value);
+               
                 } catch (const std::exception& e) {
                     std::cout << "Error converting cell to double: " << cell << std::endl;
                 }
@@ -137,7 +132,7 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
 };
 
 int ProcessCSV::findFirstRPeak(deriv A) {
-    // Set a threshold for peak detection
+    
 
     // Variables to track peak detection
     int rPeakIndex = -1;
@@ -149,8 +144,10 @@ int ProcessCSV::findFirstRPeak(deriv A) {
             maxAmplitude = A.valor[i];
         }
     }
+    // Set a threshold for peak detection
     double threshold = 0.7 * maxAmplitude;
-    std::cout << "el tamano de threshjold en find es "<<threshold<<"\n";
+    std::cout << "el tamano de threshold en find es "<<threshold<<"\n";
+    
     // Iterate over the ECG data
    for (int i = 1; i < size - 1; ++i) {
         if (A.valor[i] > A.valor[i - 1] && A.valor[i] > A.valor[i + 1] && A.valor[i] > threshold) {

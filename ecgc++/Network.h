@@ -63,40 +63,29 @@ class Network {
    Network (std::vector<ComparativeCosine> CosinesAll,int size){
     std::cout<< "Procesando Array\n";
     Edge e;
-    //ifstream inFile;
+    
     unsigned long aux;
     double w;
     nNodes = nEdges = nEdgesNew = 0;
     thrshld = 1.0;
     density = 1.0;
     nNodes=size;
-      nEdges=CosinesAll.size();
-     //inFile.open(fileName);
-     //inFile >> nNodes;
-     //inFile >> nEdges;
-     //cout << "#Nodes: " << nNodes << ", #Edges: " << nEdges << endl << endl;
+    nEdges=CosinesAll.size();
+  
+    nodes = new vector<Edge>[nNodes];
 
-     nodes = new vector<Edge>[nNodes];
-
-     // Reading first edge and initializing wMax and wMin
-     /*inFile >> e.origin;
-     inFile >> e.destination;
-     inFile >> w;*/
+     
      e.origin=CosinesAll[0].IDA;
      e.originumber=CosinesAll[0].i;
      e.destinationnumber=CosinesAll[0].j;
      e.destination=CosinesAll[0].IDB;
      e.weight = wMax = wMin = w=CosinesAll[0].cosineindez;
     
-     //nodes[e.originumber].push_back(e);
-     //nodes[e.destinationnumber].push_back(e);
+    
 
      aux = 1;
 
      // Prime read
-     /*inFile >> e.origin;
-     inFile >> e.destination;
-     inFile >> w;*/
      for (int i=1;i<CosinesAll.size();i++){
           e.weight =w;
           nodes[e.originumber].push_back(e);
@@ -110,7 +99,7 @@ class Network {
           w=CosinesAll[i].cosineindez;
       aux++;    // Counting the actual number of edges read
      }
-     //inFile.close();
+    
 
      if (aux != nEdges) {
        std::cout << " Number of edges read: " << aux << " number expected: "
@@ -119,14 +108,7 @@ class Network {
      }
 
      std::cout << "Max weight: " << wMax << ", Min weight: " << wMin << endl;
-     /*
-     for (unsigned long i =0; i < nNodes; i++){
-       cout << i <<": "<< endl;
-     for (auto edg : nodes[i]){
-       cout << "    " << edg.origin << "  " << edg.destination << "  " << edg.weight << endl;
-     }
-     }
-     */
+     
    }
 
 

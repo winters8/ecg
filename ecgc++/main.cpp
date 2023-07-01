@@ -21,9 +21,5 @@ int main(){
     double thrs;
     thrs = ejem.threshold();
     ejem.newNetwork(CosinesAll,thrs);
-// Replace 2 with the desired column index
-    // Print the column data
-    //processes.PrintListECGS(ECGList);
-    //write.WriteCSV(Array);
     return 0;
 };
