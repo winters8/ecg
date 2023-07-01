@@ -1,60 +1,17 @@
-#include "ecg.h"
 #include "processcsv.h"
 #include "network_processes.h"
+
 namespace fs = std::filesystem;
 
-std::vector<ecg_singlederiv> ProcessCSV::readNormalizeCSV(std::string directory) {
-    indexsECG indices;
-    std::vector<ecg_singlederiv> ECGVector;
-    int files_reader=1;
-    derivNorm A;
-    //char delimiter= ',';
-    for (const auto& entry : fs::directory_iterator(directory)) {
-        ecg_singlederiv ECG("",A);
-        const std::string filename = entry.path().string();
-        std::cout <<files_reader<< "\n";
-        std::ifstream file(filename);
-            if (!file.is_open()) {
-                std::cout << "Error opening file: " << filename << std::endl;
-                continue;
-            }
-        std::string line;
-        std::getline(file, line);
-        int posarray=0;
-        while (std::getline(file, line)) {
-            std::istringstream lineStream(line);
-            double value;
-                try {
-                    value = std::stod(line);
-                    A.valor[posarray]=value;
-                    posarray++;
-                } catch (const std::exception& e) {
-                    std::cout << "Error converting cell to double: " << line << std::endl;
-                }
-            //}
-        }
-        file.close();
-        std::filesystem::path filePath(filename);
-        std::string fileECG = filePath.filename().string();
-        int size = sizeof(A.valor) / sizeof(A.valor[0]);
-        std::cout <<"valor size "<< size<<"\n";
-        indices = calculateNormalizedStandardDeviation(fileECG,A.valor,size);
-        ECG.setAutocorrelation_index(indices.normalizedStandardDeviation);
-        ECG.setBpm_index(indices.bpm);
-        ECG.setID_ECG(fileECG);
-        ECG.setderivnorm(A);
-        ECGVector.push_back(ECG);
-        files_reader++;
-        }
-    return ECGVector;
-};
-
+/*method to read the datasheet, only the chosen column and perform a preprocessing 
+* to normalize all the ECGs so that they all start at the first point R, 
+* it will create CSV files with the normalized data.*/
 int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex){
     std::vector<int> PosicionesprimerR;
     int files_reader=1;
     deriv A;
     char delimiter= ',';
-    int descartados=0;
+    int discarded=0;
     for (const auto& entry : fs::directory_iterator(directory)) {
         derivNorm M;
         const std::string filename = entry.path().string();
@@ -115,7 +72,7 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
                 }
         }
         else{
-            descartados++;
+            discarded++;
         }
     }
 
@@ -127,10 +84,60 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
 
         }
     }
-    std::cout <<"archivos descartados : "<<descartados <<"\n";
+    std::cout <<"archivos descartados : "<<discarded <<"\n";
     return 0;
 };
 
+/* Method to read the already normalized files 
+* and create a vector with the objects "ecg_singlederiv"
+*/
+std::vector<ecg_singlederiv> ProcessCSV::readNormalizeCSV(std::string directory) {
+    indexsECG index;
+    std::vector<ecg_singlederiv> ECGVector;
+    int files_reader=1;
+    derivNorm A;
+
+    for (const auto& entry : fs::directory_iterator(directory)) {
+        ecg_singlederiv ECG("",A);
+        const std::string filename = entry.path().string();
+        std::cout <<files_reader<< "\n";
+        std::ifstream file(filename);
+            if (!file.is_open()) {
+                std::cout << "Error opening file: " << filename << std::endl;
+                continue;
+            }
+        std::string line;
+        std::getline(file, line);
+        int posarray=0;
+        while (std::getline(file, line)) {
+            std::istringstream lineStream(line);
+            double value;
+                try {
+                    value = std::stod(line);
+                    A.valor[posarray]=value;
+                    posarray++;
+                } catch (const std::exception& e) {
+                    std::cout << "Error converting cell to double: " << line << std::endl;
+                }
+        }
+        file.close();
+        std::filesystem::path filePath(filename);
+        std::string fileECG = filePath.filename().string();
+        int size = sizeof(A.valor) / sizeof(A.valor[0]);
+        std::cout <<"valor size "<< size<<"\n";
+        index = calculateNormalizedStandardDeviation(fileECG,A.valor,size);
+        ECG.setAutocorrelation_index(index.normalizedStandardDeviation);
+        ECG.setBpm_index(index.bpm);
+        ECG.setID_ECG(fileECG);
+        ECG.setderivnorm(A);
+        ECGVector.push_back(ECG);
+        files_reader++;
+        }
+    return ECGVector;
+};
+
+/* method to find and fix the first R point 
+* within the ECG data*/
 int ProcessCSV::findFirstRPeak(deriv A) {
     
 
@@ -158,6 +165,8 @@ int ProcessCSV::findFirstRPeak(deriv A) {
     return rPeakIndex;
 }
 
+/*method to calculate the normalized 
+* standard deviation of each ECG*/
 indexsECG ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,const double* array,int size) {
     indexsECG indicesreturn;
     double maxAmplitude = array[0];
@@ -176,11 +185,6 @@ indexsECG ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,c
             rPoints.push_back(i);
         }
     }
-/*
-    for (const auto& position : rPoints) {
-        std::cout << "posiciones: " << position << "\n ";
-    }
-*/
 
     std::vector<double> distances;
     for (size_t i = 1; i < rPoints.size(); ++i) {
@@ -222,25 +226,4 @@ indexsECG ProcessCSV::calculateNormalizedStandardDeviation(std::string fileECG,c
     double bpm = 60.0 / averageTimeInterval;
     indicesreturn.bpm=bpm;
     return indicesreturn;
-};
-
-int ProcessCSV::WriteCSV(std::vector<ComparativeCosine> comparatives){
-    std::ofstream file("data.csv");
-
-    if (file.is_open())
-    {
-        file << "IDA, IDB, weith\n";
-        for(const ComparativeCosine comparative: comparatives){
-            file << comparative.IDA <<","<<comparative.IDB<<","<<comparative.cosineindez<<"\n";
-        }
-        // Close the file
-        file.close();
-        std::cout << "CSV file created successfully." << std::endl;
-    }
-    else
-    {
-        std::cerr << "Failed to create the CSV file." << std::endl;
-    }
-
-    return 0;
 };

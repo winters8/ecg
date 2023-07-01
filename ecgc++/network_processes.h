@@ -3,12 +3,10 @@
 
 #include "processcsv.h"
 #include <omp.h>
-#include "SparseArray.h"
 
 class NetworkProcesses{
 
 public:
-    void PrintListECGS(std::vector<ecg_singlederiv> ECGList);
    
     std::vector<ComparativeCosine> cosineSimilarity(std::vector<ecg_singlederiv>& ECGList);
 

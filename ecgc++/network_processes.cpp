@@ -7,13 +7,6 @@ struct Position {
     int col;
 };
 
-void NetworkProcesses::PrintListECGS(std::vector<ecg_singlederiv> ECGList){
-    for (const ecg_singlederiv& ecg: ECGList){
-       std::cout << ecg.getID_ECG()<< "\n";
-        double correlation = ecg.getCorrelationindex();
-        std::cout << "correlation index: " <<correlation<< "\n";
-    }
-};
 // Function to calculate the dot product of two arrays
 std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
 

@@ -14,7 +14,6 @@
 #include <vector>
 #include <queue>
 #include <math.h>
-#include "SparseArray.h"
 using namespace std;
 
 /**
