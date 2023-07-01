@@ -9,6 +9,9 @@
 struct deriv{
         double valor[5010];
 };
+struct derivNorm{
+    double valor[3507];
+};
 class ecg_singlederiv: public ecgInterface
 {
 private:
@@ -16,11 +19,12 @@ private:
     deriv A_;
     double correlationindex;
     double BPM;
+    derivNorm M_;
 public:
     
-    ecg_singlederiv(const std::string id, struct deriv A){
+    ecg_singlederiv(const std::string id, struct derivNorm A){
         ID=id;
-        A_=A;
+        M_=A;
     };
 
     deriv getderiv() const {
@@ -48,5 +52,11 @@ public:
     void setBpm_index(double index){
         BPM=index;
     }
+    void setderivnorm(struct derivNorm M){
+        M_=M;
+    };
+    derivNorm getderivnorm() const {
+        return M_;
+    };
 };
 #endif

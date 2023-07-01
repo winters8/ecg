@@ -14,7 +14,7 @@
 #include <vector>
 #include <queue>
 #include <math.h>
-
+#include "SparseArray.h"
 using namespace std;
 
 /**
@@ -37,8 +37,10 @@ class Network {
   // Private class members
   private:
     struct Edge {
-      unsigned long origin;       // First node
-      unsigned long destination;  // Second node
+      unsigned int originumber;
+      unsigned int destinationnumber;
+      std::string origin;       // First node
+      std::string destination;  // Second node
       double weight;              // Edge weight
     };
 
@@ -58,64 +60,55 @@ class Network {
     * maximum and minimum edge weight values are determined.
     * @param fileName The file to read to define the network
     */
-   Network (string fileName){
-     Edge e;
-     ifstream inFile;
-     unsigned long aux;
-     double w;
-     nNodes = nEdges = nEdgesNew = 0;
-     thrshld = 1.0;
-     density = 1.0;
+   Network (std::vector<ComparativeCosine> CosinesAll,int size){
+    std::cout<< "Procesando Array\n";
+    Edge e;
+    
+    unsigned long aux;
+    double w;
+    nNodes = nEdges = nEdgesNew = 0;
+    thrshld = 1.0;
+    density = 1.0;
+    nNodes=size;
+    nEdges=CosinesAll.size();
+  
+    nodes = new vector<Edge>[nNodes];
 
-     inFile.open(fileName);
-     inFile >> nNodes;
-     inFile >> nEdges;
-     cout << "#Nodes: " << nNodes << ", #Edges: " << nEdges << endl << endl;
-
-     nodes = new vector<Edge>[nNodes];
-
-     // Reading first edge and initializing wMax and wMin
-     inFile >> e.origin;
-     inFile >> e.destination;
-     inFile >> w;
-     e.weight = wMax = wMin = w;;
-     nodes[e.origin].push_back(e);
-     nodes[e.destination].push_back(e);
+     
+     e.origin=CosinesAll[0].IDA;
+     e.originumber=CosinesAll[0].i;
+     e.destinationnumber=CosinesAll[0].j;
+     e.destination=CosinesAll[0].IDB;
+     e.weight = wMax = wMin = w=CosinesAll[0].cosineindez;
+    
+    
 
      aux = 1;
 
      // Prime read
-     inFile >> e.origin;
-     inFile >> e.destination;
-     inFile >> w;
-     while (!inFile.eof()){
-       e.weight = w;
-       nodes[e.origin].push_back(e);
-       nodes[e.destination].push_back(e);
-       if (w > wMax) wMax = w;
-       if (w < wMin) wMin = w;
-       inFile >> e.origin;
-       inFile >> e.destination;
-       inFile >> w;
-       aux++;    // Counting the actual number of edges read
+     for (int i=1;i<CosinesAll.size();i++){
+          e.weight =w;
+          nodes[e.originumber].push_back(e);
+          nodes[e.destinationnumber].push_back(e);
+          if (w > wMax) wMax = w;
+          if (w < wMin) wMin = w;
+          e.origin=CosinesAll[i].IDA;
+          e.originumber=CosinesAll[i].i;
+          e.destinationnumber=CosinesAll[i].j;
+          e.destination=CosinesAll[0].IDB;
+          w=CosinesAll[i].cosineindez;
+      aux++;    // Counting the actual number of edges read
      }
-     inFile.close();
+    
 
      if (aux != nEdges) {
-       cout << " Number of edges read: " << aux << " number expected: "
+       std::cout << " Number of edges read: " << aux << " number expected: "
             << nEdges <<". ERROR in data, check edges." << endl;
        exit(0);
      }
 
-     cout << "Max weight: " << wMax << ", Min weight: " << wMin << endl;
-     /*
-     for (unsigned long i =0; i < nNodes; i++){
-       cout << i <<": "<< endl;
-     for (auto edg : nodes[i]){
-       cout << "    " << edg.origin << "  " << edg.destination << "  " << edg.weight << endl;
-     }
-     }
-     */
+     std::cout << "Max weight: " << wMax << ", Min weight: " << wMin << endl;
+     
    }
 
 
@@ -128,10 +121,10 @@ class Network {
    * @return The node adjacent to i along e
    */
    unsigned long adjacent (unsigned long i, Edge e) {
-     if (e.origin == i)
-       return e.destination;
+     if (e.originumber == i)
+       return e.destinationnumber;
      else
-       return e.origin;
+       return e.originumber;
    }
 
    
@@ -147,6 +140,7 @@ class Network {
    * @return The threshold edge value where the network is still connected.
    */
    double threshold(){
+    std::cout << "procesando threshold \n";
      double delta, wIni, wEnd, epsilon;
      double *thresholds;
      int j, k, nIter;
@@ -169,10 +163,10 @@ class Network {
 
      wIni = wMin;
      wEnd = wMax;
-     cout << endl << "Threshold iterations: " << nIter << endl << endl;
+     std::cout << endl << "Threshold iterations: " << nIter << endl << endl;
 
      for (int i = 0; i < nIter; i++) {
-       cout << "Iteration: " << i << endl;
+       std::cout << "Iteration: " << i << endl;
        allConnected = true;
        goOn = true;
        delta = (wEnd - wIni) / (nCores + 1); // Computing increment in this iteration
@@ -205,8 +199,8 @@ class Network {
          }
        } // End of parallel for
 
-       cout << "Thresholds     #Nodes" << endl;
-       for (j = 0; j < nCores; j++) cout << thresholds[j] << "       "
+       std::cout << "Thresholds     #Nodes" << endl;
+       for (j = 0; j < nCores; j++) std::cout << thresholds[j] << "       "
                                          << nodesConect[j] << endl;
        for (j = 0; j < nCores && goOn; j++){
          if (nodesConect[j] != nNodes) {
@@ -220,7 +214,7 @@ class Network {
          wEnd = wMax;
          wIni = thresholds[nCores - 1];
        }
-       cout << "wIni, wEnd: " << wIni << " " << wEnd << endl << endl;
+       std::cout << "wIni, wEnd: " << wIni << " " << wEnd << endl << endl;
      }
 
      thrshld = wIni; // With a threshold > than this the network is unconnected
@@ -228,30 +222,31 @@ class Network {
      return thrshld;
    }
 
-   double newNetwork(string fileName, double thrd){
-     ifstream inFile;
+   double newNetwork(std::vector<ComparativeCosine> CosinesAll, double thrd){
+    std::cout << "procesando new network \n";
+     //ifstream inFile;
      ofstream outFile;
-     unsigned long nNod, nEdg, o, d, n;
+     unsigned long nNod, nEdg ,n;
+     std::string o, d;
      double w;
      nEdgesNew = 0;
-     inFile.open(fileName);
+     //inFile.open(fileName);
      outFile.open("./src/newNetwork.csv");
-     inFile >> nNod;
-     outFile << nNod << endl;
-     inFile >> nEdg;
-
+     //inFile >> nNod;
+     //outFile << nNod << endl;
+     //inFile >> nEdg;
+      nEdg=CosinesAll.size();
      n = 0;
      for (unsigned long i = 0; i< nEdg; i++){
-       inFile >> o;
-       inFile >> d;
-       inFile >> w;
-       if (w >= thrd) {
-         nEdgesNew++;
-         outFile << o << " " << d << " " << w << endl;
-         n++;
-       }
-     }
-     inFile.close();
+      o=CosinesAll[i].IDA;
+      d=CosinesAll[i].IDB;
+      w=CosinesAll[i].cosineindez;
+      if (w >= thrd) {
+        nEdgesNew++;
+        outFile << o << " " << d << " " << w << endl;
+        n++;
+      }
+    }
      outFile.close();
 
      // Edge density

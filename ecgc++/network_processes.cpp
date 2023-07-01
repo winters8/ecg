@@ -1,6 +1,7 @@
 #include <cmath>
 #include <omp.h>
 #include "network_processes.h"
+
 struct Position {
     int row;
     int col;
@@ -15,9 +16,13 @@ void NetworkProcesses::PrintListECGS(std::vector<ecg_singlederiv> ECGList){
 };
 // Function to calculate the dot product of two arrays
 std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
+
+
+    //NetworkCommunities::SparseArray Array(ECGList.size());
     std::vector<ComparativeCosine> CosinesIndexAll;
-    deriv A;
-    deriv B;
+    derivNorm A;
+    derivNorm B;
+    
     #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
@@ -30,11 +35,10 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                 ecg_singlederiv ecga=ECGList[i];
                 compartiva.IDA= ecga.getID_ECG();
                 std::cout <<"el archivo: "<< ecga.getID_ECG()<< " esta siendo procesado por el hilo: "<<myThreadID<<"\n";
-                A = ecga.getderiv();
+                A = ecga.getderivnorm();
                 double valuea;
                 double sumOfSquaresaA = 0.0;
                 std::size_t sizea = sizeof(A.valor) / sizeof(A.valor[0]);
-
                 for (size_t z=0; z< sizea; ++z)
                     {
                         valuea=A.valor[z];
@@ -42,18 +46,18 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                     }
                 
                     double sqrtA = std::sqrt(sumOfSquaresaA);
-                    
 
-                for (size_t j = 1; j < ECGList.size(); ++j)
-                    {
-                    ecg_singlederiv ecgb=ECGList[j];
+                for (size_t t= i+1; t < ECGList.size(); ++t){
+                    int j=t;
+                    ecg_singlederiv ecgb=ECGList[t];
                     compartiva.IDB= ecgb.getID_ECG();
-                    B= ecgb.getderiv();    
+                    B= ecgb.getderivnorm();    
                     double product = 0.0;
                         for (size_t m = 0; m < sizea; ++m)
                             {
                                 product += A.valor[m] * B.valor[m];
                             }
+
                     double valueB;
                     double sumOfSquaresaB = 0.0;
                         for (size_t r=0; r< sizea; ++r)
@@ -66,10 +70,13 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         double producctoAB = sqrtA * sqrtB;
                         double division = product/producctoAB;
                         compartiva.cosineindez= division;
+                         
+                        compartiva.i=i;
+                        compartiva.j=j;
+
                         //std::cout <<"indice comparativo: " << compartiva.cosineindez<<"\n";
                         //std::cout << "division: "<< compartiva.cosineindez <<"\n";
-                        cosineprivate.push_back(compartiva);
-                        
+                        cosineprivate.push_back(compartiva);                    
                     }
             
             }
@@ -77,6 +84,16 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
             {
             CosinesIndexAll.insert(CosinesIndexAll.end(), cosineprivate.begin(),cosineprivate.end());
             }
+           
     }
+    /*
+    std::cout <<"Generando Array\n";
+    for (ComparativeCosine comp: CosinesIndexAll){
+        Array.put(comp.i,comp.j,comp.cosineindez,comp.IDA,comp.IDB);
+        std::cout <<"añadido "<<comp.IDA <<" y "<< comp.IDB <<"\n";
+    }
+     std::cout <<"array generada\n";
+     */
     return CosinesIndexAll;
 };
+

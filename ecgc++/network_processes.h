@@ -3,6 +3,7 @@
 
 #include "processcsv.h"
 #include <omp.h>
+#include "SparseArray.h"
 
 class NetworkProcesses{
 
