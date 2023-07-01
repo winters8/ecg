@@ -5,14 +5,14 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include "ecginterface.h"
+
 struct deriv{
         double valor[5010];
 };
 struct derivNorm{
     double valor[3507];
 };
-class ecg_singlederiv: public ecgInterface
+class ecg_singlederiv
 {
 private:
     std:: string ID;
@@ -31,7 +31,7 @@ public:
         return A_;
     };
     
-    std::string getID_ECG() const override{
+    std::string getID_ECG() const {
         return ID;
     };
 
@@ -43,7 +43,7 @@ public:
         A_=A;
     };
 
-    void setID_ECG(std::string id)override{
+    void setID_ECG(std::string id){
         ID=id;
     }
     void setAutocorrelation_index(double index){
