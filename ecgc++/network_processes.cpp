@@ -75,7 +75,10 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         compartiva.cosineindez= division;
                         compartiva.i=i;
                         compartiva.j=j;
-                        cosineprivate.push_back(compartiva);                    
+                        /*fiter for incorrect valors*/
+                        if(division<=1 && division>=-1){
+                        cosineprivate.push_back(compartiva);
+                        }                    
                     }
             
             }
