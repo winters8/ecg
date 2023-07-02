@@ -3,7 +3,9 @@
 
 #include "processcsv.h"
 #include <omp.h>
-
+/* Only the decaration of NetworkProcesses class 
+* and his metods
+*/
 class NetworkProcesses{
 
 public:

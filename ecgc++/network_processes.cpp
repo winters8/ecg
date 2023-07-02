@@ -2,25 +2,35 @@
 #include <omp.h>
 #include "network_processes.h"
 
+/*struct to be able to store the positions 
+* in the iterative for and be able 
+* to return it in an easier way
+*/
 struct Position {
     int row;
     int col;
 };
 
-// Function to calculate the dot product of two arrays
+/* Function to calculate the cosine similarity index
+* of two ECG data
+*/
 std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ecg_singlederiv>& ECGList){
-
-
-    //NetworkCommunities::SparseArray Array(ECGList.size());
     std::vector<ComparativeCosine> CosinesIndexAll;
     derivNorm A;
     derivNorm B;
-    
+    /*Beginning of the part of the code 
+    * to be parallelized with OpenMP
+    */
     #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
         std::vector<ComparativeCosine> cosineprivate;
-        #pragma omp for
+        /*for parallelized with OpenMP 
+        * to improve efficiency with multi-thread
+        * computing and with the shedule option 
+        * to automatically distribute the work equally among them
+        */
+        #pragma omp for schedule(auto)
         for (size_t i = 0; i < ECGList.size(); ++i)   
             {
                 int myThreadID = threadID;
@@ -63,30 +73,22 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         double producctoAB = sqrtA * sqrtB;
                         double division = product/producctoAB;
                         compartiva.cosineindez= division;
-                         
                         compartiva.i=i;
                         compartiva.j=j;
-
-                        //std::cout <<"indice comparativo: " << compartiva.cosineindez<<"\n";
-                        //std::cout << "division: "<< compartiva.cosineindez <<"\n";
                         cosineprivate.push_back(compartiva);                    
                     }
             
             }
+            /*Critical part where each thread stores 
+            * the computation and where the reading
+            * and writing processes must be controlled
+            */
             #pragma omp critical
             {
             CosinesIndexAll.insert(CosinesIndexAll.end(), cosineprivate.begin(),cosineprivate.end());
             }
            
     }
-    /*
-    std::cout <<"Generando Array\n";
-    for (ComparativeCosine comp: CosinesIndexAll){
-        Array.put(comp.i,comp.j,comp.cosineindez,comp.IDA,comp.IDB);
-        std::cout <<"añadido "<<comp.IDA <<" y "<< comp.IDB <<"\n";
-    }
-     std::cout <<"array generada\n";
-     */
-    return CosinesIndexAll;
+return CosinesIndexAll;
 };
 

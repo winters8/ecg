@@ -1,8 +1,7 @@
 /*
  * Netwokk.h
- *
- *  Created on: 13 abr. 2021
- *      Author: Alfonso Niño 
+ * Created on: 13 abr. 2021
+ * Author: Alfonso Niño 
  */
 
 #ifndef NETWORK_H_
