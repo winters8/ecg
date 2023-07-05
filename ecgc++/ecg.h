@@ -5,39 +5,58 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include "ecginterface.h"
+
 struct deriv{
         double valor[5010];
-
 };
-class ecg_singlederiv: public ecgInterface
+struct derivNorm{
+    double valor[3507];
+};
+class ecg_singlederiv
 {
 private:
     std:: string ID;
     deriv A_;
-    double autocorrelationindex;
+    double correlationindex;
+    double BPM;
+    derivNorm M_;
 public:
-    ecg_singlederiv(const std::string id, struct deriv A){
+    
+    ecg_singlederiv(const std::string id, struct derivNorm A){
         ID=id;
-        A_=A;
+        M_=A;
     };
 
     deriv getderiv() const {
         return A_;
     };
     
-    std::string getID_ECG() const override{
+    std::string getID_ECG() const {
         return ID;
     };
+
+    double getCorrelationindex() const{
+        return correlationindex;
+    };
+    
     void setderiv(struct deriv A){
         A_=A;
     };
 
-    void setID_ECG(std::string id)override{
+    void setID_ECG(std::string id){
         ID=id;
     }
-    void setAutocorrelation_index(double index) override {
-        autocorrelationindex=index;
+    void setAutocorrelation_index(double index){
+        correlationindex=index;
     }
+    void setBpm_index(double index){
+        BPM=index;
+    }
+    void setderivnorm(struct derivNorm M){
+        M_=M;
+    };
+    derivNorm getderivnorm() const {
+        return M_;
+    };
 };
 #endif

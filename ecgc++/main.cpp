@@ -3,17 +3,28 @@
 
 #include "processcsv.h"
 #include "network_processes.h"
-
+#include "Network.h"
 using namespace std;
-
+NetworkProcesses networkprocesses;
+ProcessCSV write;
 int main(){
-    string path = "C:/Users/plati/git/ECG/ecg/ECGDataDenoised";
+    /* Path of the initial raw ECG data
+    */
+    string path = "C:/dataECG";
+
+    /* Path of the preprocessed ECG data
+    */
+    string pathnorm = "C:/dataECG/norm";
     ProcessCSV reader;
     int columindex=1;
-    std::vector<ecg_singlederiv> ECGList = reader.readColumnFromCSV(path,columindex); // Replace 2 with the desired column index
-    // Print the column data
-    NetworkProcesses processes;
-    processes.PrintListECGS(ECGList);
 
+    reader.NormalizeBeginingpoingECGDATA(path,columindex);
+    std::vector<ecg_singlederiv> ECGList = reader.readNormalizeCSV(pathnorm);
+    int size= ECGList.size();
+    std::vector<ComparativeCosine> CosinesAll = networkprocesses.cosineSimilarity(ECGList);
+    Network ejem(CosinesAll,size);
+    double thrs;
+    thrs = ejem.threshold();
+    ejem.newNetwork(CosinesAll,thrs);
     return 0;
-}
+};

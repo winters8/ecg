@@ -2,9 +2,15 @@
 #define NETWORK_PROCESSES_H
 
 #include "processcsv.h"
+#include <omp.h>
+/* Only the decaration of NetworkProcesses class 
+* and his metods
+*/
 class NetworkProcesses{
-public:
-    void PrintListECGS(std::vector<ecg_singlederiv> ECGList);
-    };
 
+public:
+   
+    std::vector<ComparativeCosine> cosineSimilarity(std::vector<ecg_singlederiv>& ECGList);
+
+ };
 #endif

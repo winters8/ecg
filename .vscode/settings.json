@@ -86,7 +86,17 @@
     "random": "cpp",
     "string_view": "cpp",
     "numbers": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "condition_variable": "cpp",
+    "buffer": "cpp",
+    "executor": "cpp",
+    "internet": "cpp",
+    "io_context": "cpp",
+    "netfwd": "cpp",
+    "socket": "cpp",
+    "timer": "cpp",
+    "future": "cpp",
+    "semaphore": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
