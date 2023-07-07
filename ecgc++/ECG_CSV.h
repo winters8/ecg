@@ -26,32 +26,14 @@ struct Edge {
 
 public:
 
-ECG * readfile(std::string directory) override {
-    DIR* dir;
-    struct dirent* archivo;
-    int contador = 0;
-
-    // Abre el directorio
-    dir = opendir(directory.c_str());
-
-    if (dir) {
-        // Itera sobre los archivos del directorio
-        while ((archivo = readdir(dir)) != nullptr) {
-            // Ignora los directorios "." y ".."
-            if (archivo->d_name[0] != '.') {
-                    contador++;
-            }
-        }
-
-        // Cierra el directorio
-        closedir(dir);
-    }
-
-    ECG * listaECG = new ECG[contador];
+ECG** readfile(std::string directory,int sizearray) override {
+    ECG ** listaECG= new ECG*[sizearray];
+    int size= sizeof(listaECG)/sizeof(listaECG[0]);
+    ECG *ecg;
     int files_reader=0;
-    double deriv[3507];
+    int add=0;
     for (const auto& entry : fs::directory_iterator(directory)) {
-        ECG ECG("",deriv);
+        double deriv[3507];
         const std::string filename = entry.path().string();
         std::cout <<files_reader<< "\n";
         std::ifstream file(filename);
@@ -76,13 +58,12 @@ ECG * readfile(std::string directory) override {
         file.close();
         std::filesystem::path filePath(filename);
         std::string fileECG = filePath.filename().string();
-        int size = sizeof(listaECG);
-        std::cout <<"valor size "<< size<<"\n";
-        ECG.setAutocorrelation_index(ECG.calculateNormalizedStandardDeviation(deriv));
-        ECG.setBpm_index(ECG.CalculateBPM(deriv));
-        ECG.setID_ECG(fileECG);
-        ECG.setderivnorm(deriv);
-        listaECG[files_reader]=ECG;
+        ecg= new ECG("",deriv);
+        ecg->setAutocorrelation_index(ecg->calculateNormalizedStandardDeviation(deriv));
+        ecg->setBpm_index(ecg->CalculateBPM(deriv));
+        ecg->setID_ECG(fileECG);
+        listaECG[add]=ecg;
+        add++;
         files_reader++;
         }
     return listaECG;
@@ -136,7 +117,7 @@ int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex) overrid
             std::string file_Name = filePath.filename().string();
             std::cout <<"nombre archivo: "<< file_Name<<"\n";
             std::ofstream file2("C:/dataECG/norm/"+file_Name);
-            file2<<"pepe\n";
+            file2<<"II\n";
             if (file2.is_open())
                 {
                     for(int j=0;j<3507;j++){
@@ -173,7 +154,6 @@ int findFirstRPeak(double deriv[5010]) override {
     // Variables to track peak detection
     int rPeakIndex = -1;
     
-    std::cout << "el tamano de  array en find es "<<size<<"\n";
     double maxAmplitude = deriv[0];
     for (int i = 1; i < 5010; ++i) {
         if (deriv[i] > maxAmplitude) {
@@ -224,5 +204,29 @@ double newNetwork(SparseArray Array, double thrd)override{
      density = nEdgesNew/ ((nNodes * (nNodes - 1.0)) / 2.0);
      return density; // Edge density
    }
+   int sizearray(std::string directory){ 
+    DIR* dir;
+    struct dirent* archivo;
+    int contador = 0;
+
+    // Abre el directorio
+    dir = opendir(directory.c_str());
+
+    if (dir) {
+        // Itera sobre los archivos del directorio
+        while ((archivo = readdir(dir)) != nullptr) {
+            // Ignora los directorios "." y ".."
+            if (archivo->d_name[0] != '.') {
+                    contador++;
+            }
+        }
+
+        // Cierra el directorio
+        closedir(dir);
+    }
+    return contador;
+}
 };
+
+
 #endif 

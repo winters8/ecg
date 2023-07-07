@@ -21,11 +21,12 @@ struct Edge {
     double wMax, wMin;       // Maximum and minimum edge weights
 public:
 ECG_Net();
-SparseArray cosineSimilarity(ECG listECG[]){
+SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
     /*Beginning of the part of the code 
     * to be parallelized with OpenMP
     */
-   SparseArray Array(sizeof(listECG)*sizeof(listECG)/2);
+   size_t sizetotal=sizearray*(sizearray-1)/2;
+   SparseArray Array(sizetotal);
     #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
@@ -35,33 +36,37 @@ SparseArray cosineSimilarity(ECG listECG[]){
         * to automatically distribute the work equally among them
         */
         #pragma omp for schedule(auto)
-        for (size_t i = 0; i < sizeof(listECG); ++i)   
+        for (int i = 0; i < sizearray; ++i)   
             {
                 int myThreadID = threadID;
-                ECG ecga=listECG[i];
-                string IDA= ecga.getID_ECG();
-                std::cout <<"el archivo: "<< ecga.getID_ECG()<< " esta siendo procesado por el hilo: "<<myThreadID<<"\n";
-                double * derivnormA = ecga.getderivnorm();
+                ECG* ecga= listECG[i];
+                string IDA= ecga->getID_ECG();
+                std::cout <<"el archivo: "<< ecga->getID_ECG()<< " esta siendo procesado por el hilo: "<<myThreadID<<"\n";
+                double *derivnormA = ecga->getderiv();
                 double valuea;
                 double sumOfSquaresaA = 0.0;
-                std::size_t sizea = sizeof(derivnormA);
+                std::size_t sizea = 3507;
                 for (size_t z=0; z< sizea; ++z)
                     {
                         valuea=derivnormA[z];
+                        std::cout <<"valores A"<<valuea<<"\n";
                         sumOfSquaresaA += valuea * valuea;
+                        
                     }
-                
+                   
                     double sqrtA = std::sqrt(sumOfSquaresaA);
-
-                for (size_t t= i+1; t < sizeof(listECG); ++t){
+                    
+                for (int t= i+1; t < sizearray; ++t){
                     int j=t;
-                    ECG ecgb=listECG[t];
-                    string IDB= ecgb.getID_ECG();
-                    double * derivnormB= ecgb.getderivnorm();    
+                    ECG * ecgb=listECG[t];
+                    string IDB= ecgb->getID_ECG();
+                    double * derivnormB= ecgb->getderivnorm();    
                     double product = 0.0;
                         for (size_t m = 0; m < sizea; ++m)
                             {
+                              
                                 product += derivnormA[m] * derivnormB[m];
+                               
                             }
 
                     double valueB;

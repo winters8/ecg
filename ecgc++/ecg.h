@@ -65,9 +65,10 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     double indicesreturn;
     double maxAmplitude = derivnormalize[0];
 
-    for (size_t i = 1; i < sizeof(derivnormalize); ++i) {
+    for (size_t i = 1; i < 3507; ++i) {
         if (derivnormalize[i] > maxAmplitude) {
             maxAmplitude = derivnormalize[i];
+            
         }
     }
     
@@ -75,7 +76,7 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     std::vector<size_t> rPoints;
 
     // Find peaks above the threshold
-    for (size_t i = 1; i < sizeof(derivnormalize) - 1; ++i) {
+    for (size_t i = 1; i < 3507 - 1; ++i) {
         if (derivnormalize[i] > threshold && derivnormalize[i] > derivnormalize[i - 1] && derivnormalize[i] > derivnormalize[i + 1]) {
             rPoints.push_back(i);
         }
@@ -101,7 +102,7 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
 
     double standardDeviation = sqrt(squaredDifferencesSum / (distances.size() - 1));
 
-    double normalizedStandardDeviation = standardDeviation / (sizeof(derivnormalize) / 2.0);
+    double normalizedStandardDeviation = standardDeviation / (3507 / 2.0);
 
     std::cout << "indice desviacion normalizada: "<< normalizedStandardDeviation <<"\n";
     

@@ -41,7 +41,7 @@ along with NetworkCommunities.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef SPARSEARRAY_H
 #define SPARSEARRAY_H
 
-
+#include <omp.h>
 using namespace std;
 
   /**
@@ -72,17 +72,18 @@ using namespace std;
       };
       
       element* matrix; // Array of elements
-      int M;           // Number of edges added to the network
+      size_t M;           // Number of edges added to the network
       double sum;      // Sum of squared values (weights) added to the array
       int index;       // Current index of array matrix
-
+      omp_lock_t lock;
     public:
       
       /**
        * Constructor
        * @param n The number of rows (edges) in the array
        */
-      SparseArray(int n){
+      SparseArray(size_t n){
+        omp_init_lock(&lock);
         M = n; 
         sum = 0.0;
         index = -1;
@@ -97,11 +98,14 @@ using namespace std;
        * @param value The value of the (i, j) element
        */
       void put (int i, int j, double value){
-        index++;
-        matrix[index].row = i;
-        matrix[index].column = j;
-        matrix[index].value = value;
-        sum += value * value;
+          omp_set_lock(&lock);
+          std::cout <<"añadiendo "<<i<<","<<j<<" y "<<value<<"al array\n";
+          index++;
+          matrix[index].row = i;
+          matrix[index].column = j;
+          matrix[index].value = value;
+          sum += value * value;
+          omp_unset_lock(&lock);
       }
       
       
@@ -162,6 +166,7 @@ using namespace std;
        */
       ~SparseArray(){
         delete[] matrix;
+        omp_destroy_lock(&lock);
       }
   };
 
