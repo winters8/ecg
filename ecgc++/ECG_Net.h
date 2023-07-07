@@ -36,30 +36,28 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
         * to automatically distribute the work equally among them
         */
         #pragma omp for schedule(auto)
-        for (int i = 0; i < sizearray; ++i)   
+        for (int i=0; i < sizearray; ++i)   
             {
                 int myThreadID = threadID;
                 ECG* ecga= listECG[i];
                 string IDA= ecga->getID_ECG();
-                std::cout <<"el archivo: "<< ecga->getID_ECG()<< " esta siendo procesado por el hilo: "<<myThreadID<<"\n";
-                double *derivnormA = ecga->getderiv();
+                std::cout <<"el archivo: "<<IDA << " esta siendo procesado por el hilo: "<<myThreadID<<"\n";
+                double* derivnormA = ecga->getderivnorm();
                 double valuea;
                 double sumOfSquaresaA = 0.0;
-                std::size_t sizea = 3507;
-                for (size_t z=0; z< sizea; ++z)
+                int sizea = 3507;
+                for (int z=0; z<sizea; ++z)
                     {
-                        valuea=derivnormA[z];
-                        std::cout <<"valores A"<<valuea<<"\n";
-                        sumOfSquaresaA += valuea * valuea;
-                        
+                      valuea=derivnormA[z];
+                        sumOfSquaresaA += valuea * valuea;  
                     }
-                   
                     double sqrtA = std::sqrt(sumOfSquaresaA);
-                    
-                for (int t= i+1; t < sizearray; ++t){
-                    int j=t;
-                    ECG * ecgb=listECG[t];
+
+                for (int t=i+1; t<sizearray; ++t)
+                    {
+                    ECG* ecgb=listECG[t];
                     string IDB= ecgb->getID_ECG();
+                   
                     double * derivnormB= ecgb->getderivnorm();    
                     double product = 0.0;
                         for (size_t m = 0; m < sizea; ++m)
@@ -71,7 +69,7 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
 
                     double valueB;
                     double sumOfSquaresaB = 0.0;
-                        for (size_t r=0; r< sizea; ++r)
+                        for (int r=0; r< sizea; ++r)
                             {
                                 valueB=derivnormB[r];
                                 sumOfSquaresaB += valueB * valueB;
@@ -92,7 +90,7 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
 return Array;
 }
 
-ECG_Net (SparseArray Array,int size){
+ECG_Net (SparseArray Array, int size){
     std::cout<< "Procesando Array\n";
     Edge e;
     

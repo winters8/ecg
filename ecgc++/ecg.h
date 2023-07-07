@@ -17,9 +17,9 @@ private:
     double *deriv;
 public:
     ECG();
-    ECG(const std::string id, double derivreader[5010]){
+    ECG(const std::string id, double derivreader[3507]){
         ID=id;
-        deriv=derivreader;
+        derivnormalized=derivreader;
     };
 
     double* getderiv() const {
@@ -115,29 +115,29 @@ double CalculateBPM(double derivnormalize[3507]){
     double maxAmplitude = derivnormalize[0];
     double threshold = 0.7 * maxAmplitude;
     std::vector<size_t> rPoints;
-
+    double bpm= 0.0;
     // Find peaks above the threshold
-    for (size_t i = 1; i < sizeof(derivnormalize) - 1; ++i) {
+    for (size_t i = 1; i < 3507- 1; ++i) {
         if (derivnormalize[i] > threshold && derivnormalize[i] > derivnormalize[i - 1] && derivnormalize[i] > derivnormalize[i + 1]) {
             rPoints.push_back(i);
         }
-         double sumTimeIntervals = 0.0;
-    size_t numIntervals = rPoints.size() - 1;
+        double sumTimeIntervals = 0.0;
+        size_t numIntervals = rPoints.size() - 1;
 
-    // Calculate time intervals between consecutive R points
-    for (size_t i = 1; i < rPoints.size(); ++i) {
-        double timeInterval = static_cast<double>(rPoints[i] - rPoints[i - 1]) / 500;
-        sumTimeIntervals += timeInterval;
+        // Calculate time intervals between consecutive R points
+        for (size_t i = 1; i < rPoints.size(); ++i) {
+            double timeInterval = static_cast<double>(rPoints[i] - rPoints[i - 1]) / 500;
+            sumTimeIntervals += timeInterval;
+        }
+
+        // Calculate average time duration per beat
+        double averageTimeInterval = sumTimeIntervals / numIntervals;
+
+        // Convert average time duration per beat to BPM
+        bpm = 60.0 / averageTimeInterval;
+   
     }
-
-    // Calculate average time duration per beat
-    double averageTimeInterval = sumTimeIntervals / numIntervals;
-
-    // Convert average time duration per beat to BPM
-    double bpm = 60.0 / averageTimeInterval;
     return bpm;
-    }
-
 }
 };
 #endif

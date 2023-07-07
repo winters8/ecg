@@ -17,12 +17,10 @@ int main(){
     int sizearray= reader.sizearray(pathnorm);
     listaECG = reader.readfile(pathnorm,sizearray);
     SparseArray Array=process.cosineSimilarity(listaECG,sizearray);
-    
-    
-    /*
-    ECG_Net process(Array,size);
+    std::cout <<"Numero aristas creadas: "<<Array.get_nEdges()<<"\n";
+    ECG_Net process(Array,sizearray);
     double thrs;
     thrs = process.threshold();
-    reader->newNetwork(Array,thrs);
-    return 0;*/
+    reader.newNetwork(Array,thrs);
+    return 0;
 };
