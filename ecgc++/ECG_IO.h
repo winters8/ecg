@@ -18,7 +18,7 @@
 namespace fs = std::filesystem;
 class ECG_IO{
 public:
-     virtual ECG ** readfile(std::string directory,int sizearray) = 0;
+     virtual std::vector<ECG> readfile(std::string directory,int sizearray) = 0;
      virtual int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex) = 0;
      virtual int findFirstRPeak(double deriv[5010]) = 0;
      virtual double newNetwork(SparseArray Array, double thrd) = 0;

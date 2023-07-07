@@ -4,7 +4,7 @@
 #include "SparseArray.h"
 using namespace std;
 ECG_CSV reader;
-ECG** listaECG;
+std::vector<ECG> listaECG;
 ECG_Net process;
 int main(){
     /* Path of the initial raw ECG data
@@ -16,11 +16,11 @@ int main(){
     string pathnorm = "C:/dataECG/norm";
     int sizearray= reader.sizearray(pathnorm);
     listaECG = reader.readfile(pathnorm,sizearray);
-    SparseArray Array=process.cosineSimilarity(listaECG,sizearray);
+    /*SparseArray Array=process.cosineSimilarity(listaECG,sizearray);
     std::cout <<"Numero aristas creadas: "<<Array.get_nEdges()<<"\n";
     ECG_Net process(Array,sizearray);
     double thrs;
     thrs = process.threshold();
-    reader.newNetwork(Array,thrs);
+    reader.newNetwork(Array,thrs);*/
     return 0;
 };
