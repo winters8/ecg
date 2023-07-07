@@ -1,30 +1,25 @@
 #include <iostream>
 #include <string>
-
-#include "processcsv.h"
-#include "network_processes.h"
-#include "Network.h"
+#include "ECG_Net.h"
+#include "SparseArray.h"
 using namespace std;
-NetworkProcesses networkprocesses;
-ProcessCSV write;
+ECG_CSV reader;
+ECG * listaECG;
+ECG_Net process;
 int main(){
     /* Path of the initial raw ECG data
     */
     string path = "C:/dataECG";
-
+    reader.NormalizeBeginingpoingECGDATA(path,1);
     /* Path of the preprocessed ECG data
     */
-    string pathnorm = "C:/dataECG/norm";
-    ProcessCSV reader;
-    int columindex=1;
-
-    reader.NormalizeBeginingpoingECGDATA(path,columindex);
-    std::vector<ecg_singlederiv> ECGList = reader.readNormalizeCSV(pathnorm);
-    int size= ECGList.size();
-    std::vector<ComparativeCosine> CosinesAll = networkprocesses.cosineSimilarity(ECGList);
-    Network ejem(CosinesAll,size);
+    /*string pathnorm = "C:/dataECG/norm";
+    listaECG = reader->readfile(pathnorm);
+    SparseArray Array=process.cosineSimilarity(listaECG);
+    int size= sizeof(listaECG);
+    ECG_Net process(Array,size);
     double thrs;
-    thrs = ejem.threshold();
-    ejem.newNetwork(CosinesAll,thrs);
-    return 0;
+    thrs = process.threshold();
+    reader->newNetwork(Array,thrs);
+    return 0;*/
 };

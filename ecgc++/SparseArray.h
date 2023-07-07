@@ -1,19 +1,21 @@
 /*
 
-Copyright (C) 2023  A. Ni�o
+Copyright (C) 2018  A. Niño
 
-Network.h is free software: you can redistribute it and/or modify
+This file is part of NetworkCommunities.
+
+NetworkCommunities is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Network.h is distributed in the hope that it will be useful,
+NetworkCommunities is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Network.h.  If not, see <https://www.gnu.org/licenses/>.
+along with NetworkCommunities.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
@@ -24,13 +26,10 @@ along with Network.h.  If not, see <https://www.gnu.org/licenses/>.
 * Authors: SciCom research group-E.S.I. Universidad de Castilla-La Mancha
 *          Paseo de la Universidad 4, 13004-Ciudad Real. SPAIN
 *
-* Release date: July 2023, August, 2018
+* Release date: August, 2018
 *
 * Purpose: Definition (header) and implementation file for class SparseArray
-*          Class SparseArray is essentially a compact form of representing
-*          adjacency matrices. It can represent dense arrays without problems,
-*          but its structure allows also representing efficiently sparse
-*          arrays.
+*
 *****************************************************************************/
 
 /**
@@ -42,99 +41,130 @@ along with Network.h.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef SPARSEARRAY_H
 #define SPARSEARRAY_H
 
-#include "Edge.h"
+
+using namespace std;
 
   /**
- * \brief Defines a sparse (usually) array representation of an adjacency matrix
+ * \brief Defines a sparse array
  *
- * This class represents an adjacency matrix where only non-zero elements are
+ * This class represents a sparse array where only non-zero elements are 
  * stored.
  * @author SciCom research group-E.S.I. Universidad de Castilla-La Mancha.
  *         Paseo de la Universidad 4, 13004-Ciudad Real. SPAIN
- *
- * @date July 2023, August, 2018
+ * 
+ * @date August, 2018
  */
+  
 
+  class SparseArray {
+    private:
+      /**
+       * Structure element. This stores the value of the row, colum and 
+       * value given to an item. In the current case each element represent an 
+       * edge of the network. The row field stores the origin node of the edge,
+       * the column field the destination node and the value field stores the
+       * weight of the edge.
+       */
+      struct element{
+        int row;
+        int column;
+        double value;
+      };
+      
+      element* matrix; // Array of elements
+      int M;           // Number of edges added to the network
+      double sum;      // Sum of squared values (weights) added to the array
+      int index;       // Current index of array matrix
 
-class SparseArray {
-  private:
-    Edge* matrix;    // Array of edges
-    int M;           // Number of edges added to the network
-    int index;       // Current index of array matrix
+    public:
+      
+      /**
+       * Constructor
+       * @param n The number of rows (edges) in the array
+       */
+      SparseArray(int n){
+        M = n; 
+        sum = 0.0;
+        index = -1;
+        matrix = new element[M]; 
+      }
+      
+     
+      /**
+       * Method for adding the i, j element to the sparse array. 
+       * @param i The row of the element
+       * @param j The column of the element
+       * @param value The value of the (i, j) element
+       */
+      void put (int i, int j, double value){
+        index++;
+        matrix[index].row = i;
+        matrix[index].column = j;
+        matrix[index].value = value;
+        sum += value * value;
+      }
+      
+      
+      /**
+       * Method for retrieving the row of the ith element from the sparse array
+       * @param i The edge index of the element
+       * @return The row of the ith element (edge)
+       */
+      int r (int i){
+        return matrix[i].row;
+      }
+      
+      
+      /**
+       * Method for retrieving the column of the ith element from the 
+       * sparse array
+       * @param i The edge index of the element
+       * @return The column of the ith element (edge)
+       */
+      int c (int i){
+        return matrix[i].column;
+      }
+      
 
-  public:
+      /**
+       * Method for retrieving the value of the ith element from the 
+       * sparse array
+       * @param i The edge index of the element
+       * @return The value (weight) of the ith element (edge)
+       */
+      double v (int i){
+        return matrix[i].value;
+      }      
+      
+      
+      /**
+       * Method for getting the number of edges (non-zero elements) in the 
+       * network
+       * @return The number of edges in the network.
+       */
+      int get_nEdges(){
+        return M;
+      }
+      
+      
+      /**
+       * Method for getting the sum of squared weights of non-zero elements in
+       * the network
+       * @return The sum of squared weights of non-zero elements.
+       */
+      double get_weightsSum(){
+        return sum;
+      }
+      
+            
+      /**
+       * Destructor method
+       */
+      ~SparseArray(){
+        delete[] matrix;
+      }
+  };
 
-    /**
-     * Constructor
-     * @param n The number of rows (edges) in the array
-     */
-    SparseArray(int n){
-      M = n;
-      index = -1;
-      matrix = new Edge[M];
-    }
-
-
-    /**
-     * Method for adding the i, j element to the sparse array.
-     * @param i The row of the edge
-     * @param j The column of the edge
-     * @param value The weight of the (i, j) edge
-     */
-    void put (int i, int j, double value){
-      index++;
-      matrix[index] = Edge (i, j, value);
-    }
-
-
-    /**
-     * Method for retrieving the row of the ith edge from the sparse array
-     * @param i The edge index of the element
-     * @return The row (first node) of the ith element (edge)
-     */
-    int r (int i){
-      return matrix[i].getRow();
-    }
-
-
-    /**
-     * Method for retrieving the column of the ith element from the
-     * sparse array
-     * @param i The edge index of the element
-     * @return The column (second node) of the ith element (edge)
-     */
-    int c (int i){
-      return matrix[i].getColumn();
-    }
-
-
-    /**
-     * Method for retrieving the weight of the ith element from the
-     * sparse array
-     * @param i The edge index of the element
-     * @return The value (weight) of the ith element (edge)
-     */
-    double v (int i){
-      return matrix[i].getWeight();
-    }
-
-
-    /**
-     * Method for getting the number of edges (non-zero elements) in the
-     * network
-     * @return The number of edges in the network.
-     */
-    int get_nEdges(){
-      return M;
-    }
-
-
-    /**
-     * Destructor method
-     */
-    ~SparseArray(){
-      delete[] matrix;
-    }
-};
 
 #endif /* SPARSEARRAY_H */
+
