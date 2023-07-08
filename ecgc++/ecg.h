@@ -16,7 +16,6 @@ private:
     double *derivnormalized;
     double *deriv;
 public:
-    ECG();
     ECG(const std::string id, double derivreader[3507]){
         ID=id;
         derivnormalized=derivreader;
@@ -54,9 +53,6 @@ public:
     }
 
 
-/* method to find and fix the first R point 
-* within the ECG data*/
-
 
 
 /*method to calculate the normalized 
@@ -68,7 +64,6 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     for (size_t i = 1; i < 3507; ++i) {
         if (derivnormalize[i] > maxAmplitude) {
             maxAmplitude = derivnormalize[i];
-            
         }
     }
     

@@ -148,6 +148,9 @@ int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex) overrid
     return 0;
 };
 
+/* method to find and fix the first R point 
+* within the ECG data*/
+
 int findFirstRPeak(double deriv[5010]) override {
     
     // Variables to track peak detection
