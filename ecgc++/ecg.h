@@ -60,7 +60,7 @@ public:
 double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     double indicesreturn;
     double maxAmplitude = derivnormalize[0];
-
+    
     for (size_t i = 1; i < 3507; ++i) {
         if (derivnormalize[i] > maxAmplitude) {
             maxAmplitude = derivnormalize[i];
@@ -94,7 +94,7 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     for (const auto& distance : distances) {
         squaredDifferencesSum += pow(distance - mean, 2);
     }
-
+    
     double standardDeviation = sqrt(squaredDifferencesSum / (distances.size() - 1));
 
     double normalizedStandardDeviation = standardDeviation / (3507 / 2.0);
@@ -104,8 +104,7 @@ double calculateNormalizedStandardDeviation(double derivnormalize[3507]) {
     return normalizedStandardDeviation;
 };
 
-/*method to calculate the normalized 
-* standard deviation of each ECG*/
+/*method to calculate the BPM of each ECG*/
 double CalculateBPM(double derivnormalize[3507]){
     double maxAmplitude = derivnormalize[0];
     double threshold = 0.7 * maxAmplitude;
