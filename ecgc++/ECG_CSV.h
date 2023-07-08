@@ -26,13 +26,14 @@ struct Edge {
 
 public:
 
-std::vector<ECG> readfile(std::string directory,int sizearray) override {
-    std::vector<ECG> listaECG;
+ECG** readfile(std::string directory,int sizearray) override {
+    ECG ** listaECG= new ECG*[sizearray];
     int files_reader=0;
+    int n=3507;
     int add=0;
-    double deriv[3507];
+    ECG *ecg;
     for (const auto& entry : fs::directory_iterator(directory)) {
-        ECG ecg("",deriv);
+        double deriv[n];
         const std::string filename = entry.path().string();
         std::cout <<files_reader<< "\n";
         std::ifstream file(filename);
@@ -55,12 +56,13 @@ std::vector<ECG> readfile(std::string directory,int sizearray) override {
                 }
         }
         file.close();
+        ecg= new ECG("",deriv);
         std::filesystem::path filePath(filename);
         std::string fileECG = filePath.filename().string();
-        ecg.setAutocorrelation_index(ecg.calculateNormalizedStandardDeviation(deriv));
-        ecg.setBpm_index(ecg.CalculateBPM(deriv));
-        ecg.setID_ECG(fileECG);
-        listaECG.push_back(ecg);
+        ecg->setAutocorrelation_index(ecg->calculateNormalizedStandardDeviation(deriv));
+        ecg->setBpm_index(ecg->CalculateBPM(deriv));
+        ecg->setID_ECG(fileECG);
+        listaECG[add]=ecg;
         files_reader++;
         }
     return listaECG;

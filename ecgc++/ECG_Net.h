@@ -45,9 +45,6 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
                 double* derivnormA = ecga->getderivnorm();
                 double autocorrelacion =ecga->getCorrelationindex();
                 std:cout <<"autocorrelation index : "<<autocorrelacion <<"\n";
-                int size = sizeof(derivnormA);
-                std::cout <<"size deriv normal: "<<size <<"\n";
-                std::exit(0);
                 double valuea;
                 double sumOfSquaresaA = 0.0;
                 int sizea = 3507;
