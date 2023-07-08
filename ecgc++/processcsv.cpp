@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 * to normalize all the ECGs so that they all start at the first point R, 
 * it will create CSV files with the normalized data.*/
 int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex){
-    std::vector<int> PosicionesprimerR;
+    //std::vector<int> PosicionesprimerR;
     int files_reader=1;
     deriv A;
     char delimiter= ',';
@@ -48,7 +48,7 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
         int size = sizeof(A.valor) / sizeof(A.valor[0]);
         int posicion = findFirstRPeak(A);
         if (posicion <1500){
-            for(int z=posicion;z<3507;z++){
+            for(int z=posicion;z<3507+posicion;z++){
                 M.valor[z-posicion]=A.valor[z];
             }
             files_reader++;
@@ -76,14 +76,14 @@ int ProcessCSV::NormalizeBeginingpoingECGDATA(std::string directory,int columnIn
         }
     }
 
-    int max=0;
+    /*int max=0;
     for (const int posicion: PosicionesprimerR)
     {
         if(posicion>max){
             max=posicion;
 
         }
-    }
+    }*/
     std::cout <<"archivos descartados : "<<discarded <<"\n";
     return 0;
 };
