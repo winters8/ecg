@@ -108,7 +108,7 @@ int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex) overrid
         int posicion = findFirstRPeak(derivraw);
         double derivnormalized[3507];
         if (posicion<1500){
-            for(int z=posicion;z<3507;z++){
+            for(int z=posicion;z<3507+posicion;z++){
                 derivnormalized[z-posicion]=derivraw[z];
             }
             files_reader++;
@@ -133,15 +133,6 @@ int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex) overrid
         }
         else{
             discarded++;
-        }
-    }
-
-    int max=0;
-    for (const int posicion: PosicionesprimerR)
-    {
-        if(posicion>max){
-            max=posicion;
-
         }
     }
     std::cout <<"archivos descartados : "<<discarded <<"\n";

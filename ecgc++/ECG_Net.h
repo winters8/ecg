@@ -21,7 +21,7 @@ struct Edge {
     double wMax, wMin;       // Maximum and minimum edge weights
 public:
 ECG_Net();
-SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
+SparseArray cosineSimilarity(ECG* listECG[],int sizearray){
     /*Beginning of the part of the code 
     * to be parallelized with OpenMP
     */
@@ -58,19 +58,20 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
                 for (int t=i+1; t<sizearray; ++t)
                     {
                     ECG* ecgb=listECG[t];
-                    string IDB= ecgb->getID_ECG();
-                   
-                    double * derivnormB= ecgb->getderivnorm();    
+                    double * derivnormB= ecgb->getderivnorm(); 
+                      
                     double product = 0.0;
-                        for (size_t m = 0; m < sizea; ++m)
+                        for (int m = 0; m < sizea; ++m)
                             {
-                              
-                                product += derivnormA[m] * derivnormB[m];
-                               
+                              double a=derivnormA[m];
+                              double b=derivnormB[m];
+                               std::cout<<" valor a: "<<a <<" valor b: "<<b<<"\n";
+                              product += a * b;                             
                             }
-
+                    
                     double valueB;
                     double sumOfSquaresaB = 0.0;
+                    
                         for (int r=0; r< sizea; ++r)
                             {
                                 valueB=derivnormB[r];
@@ -82,6 +83,7 @@ SparseArray cosineSimilarity(ECG * listECG[],int sizearray){
                         double division = product/producctoAB;
                         /*fiter for incorrect valors*/
                         if(division<=1 && division>=-1){
+                          
                             Array.put(i,t,division);
                         }                    
                     }

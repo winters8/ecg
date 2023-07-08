@@ -9,8 +9,8 @@ ECG_Net process;
 int main(){
     /* Path of the initial raw ECG data
     */
-    //string path = "C:/dataECG";
-    //reader.NormalizeBeginingpoingECGDATA(path,1);
+    /*string path = "C:/dataECG";
+    reader.NormalizeBeginingpoingECGDATA(path,1);*/
     /* Path of the preprocessed ECG data
     */
     string pathnorm = "C:/dataECG/norm";
