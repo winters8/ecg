@@ -20,13 +20,6 @@ struct ComparativeCosine{
         double cosineindez;
 };
 
-/*A struct is created to store the normalized standard deviation
-* and BPM of each ECG and then return these values more easily.*/
-struct indexsECG{
-    double normalizedStandardDeviation;
-    double bpm;
-};
-
 /*An alias is created for the function 
 * std::filesystem for easier access*/
 namespace fs = std::filesystem;
@@ -37,7 +30,6 @@ class ProcessCSV{
 public:
 int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex);
 std::vector<ecg_singlederiv> readNormalizeCSV(std::string directory);
-indexsECG calculateNormalizedStandardDeviation(std::string fileECG,const double* array, int size);
 int findFirstRPeak(deriv A);
 };
 #endif

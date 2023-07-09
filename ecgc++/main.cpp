@@ -18,7 +18,7 @@ int main(){
     ProcessCSV reader;
     int columindex=1;
 
-    reader.NormalizeBeginingpoingECGDATA(path,columindex);
+    //reader.NormalizeBeginingpoingECGDATA(path,columindex);
     std::vector<ecg_singlederiv> ECGList = reader.readNormalizeCSV(pathnorm);
     int size= ECGList.size();
     std::vector<ComparativeCosine> CosinesAll = networkprocesses.cosineSimilarity(ECGList);
