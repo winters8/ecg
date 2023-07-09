@@ -12,7 +12,7 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
     /*Beginning of the part of the code 
     * to be parallelized with OpenMP
     */
-    #pragma omp parallel
+    #pragma omp parallel 
     {
         int threadID = omp_get_thread_num();
         std::vector<ComparativeCosine> cosineprivate;
