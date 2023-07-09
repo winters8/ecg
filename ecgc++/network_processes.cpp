@@ -2,15 +2,6 @@
 #include <omp.h>
 #include "network_processes.h"
 
-/*struct to be able to store the positions 
-* in the iterative for and be able 
-* to return it in an easier way
-*/
-struct Position {
-    int row;
-    int col;
-};
-
 /* Function to calculate the cosine similarity index
 * of two ECG data
 */
