@@ -16,14 +16,16 @@ struct derivNorm{
 * and BPM of each ECG and then return these values more easily.*/
 
 struct indexsECG{
-    double normalizedStandardDeviation;
+    double NSDeviation;
     double bpm;
+    double autocorrelationindex;
 };
 class ecg_singlederiv
 {
 private:
     std:: string ID;
     deriv A_;
+    double NormalizedStandardDeviation;
     double correlationindex;
     double BPM;
     derivNorm M_;
@@ -45,6 +47,10 @@ public:
     double getCorrelationindex() const{
         return correlationindex;
     };
+
+    double getNSDeviation() const{
+        return NormalizedStandardDeviation;
+    };
     
     void setderiv(struct deriv A){
         A_=A;
@@ -55,6 +61,9 @@ public:
     }
     void setAutocorrelation_index(double index){
         correlationindex=index;
+    }
+     void setNSDeviation(double index){
+        NormalizedStandardDeviation=index;
     }
     void setBpm_index(double index){
         BPM=index;
@@ -67,10 +76,13 @@ public:
     };
 
     /*method to calculate the normalized 
-    * standard deviation of each ECG*/
-    indexsECG calculateNormalizedStandardDeviationAndBPM(std::string fileECG,const double* array,int size) {
+    * standard deviation of each ECG,BPM and
+    * Autocorrelation*/
+    indexsECG calculateNSDeviationBPMAndAutocorrelation(std::string fileECG,const double* array,int size) {
     indexsECG indicesreturn;
     double maxAmplitude = array[0];
+    double numerator = 0.0;
+    double denominator = 0.0;
     for (size_t i = 1; i < size; ++i) {
         if (array[i] > maxAmplitude) {
             maxAmplitude = array[i];
@@ -107,9 +119,9 @@ public:
 
     double standardDeviation = sqrt(squaredDifferencesSum / (distances.size() - 1));
 
-    double normalizedStandardDeviation = standardDeviation / (size / 2.0);
-    indicesreturn.normalizedStandardDeviation=normalizedStandardDeviation;
-    std::cout << "indice desviacion normalizada: "<< normalizedStandardDeviation <<"\n";
+    double NSDeviation = standardDeviation / (size / 2.0);
+    indicesreturn.NSDeviation=NSDeviation;
+    std::cout << "indice desviacion normalizada: "<< NSDeviation <<"\n";
     
     double sumTimeIntervals = 0.0;
     size_t numIntervals = rPoints.size() - 1;
@@ -126,6 +138,21 @@ public:
     // Convert average time duration per beat to BPM
     double bpm = 60.0 / averageTimeInterval;
     indicesreturn.bpm=bpm;
+
+    //calculating autocorrelation index
+    int lag=10;//corresponding to a time delay of 10/500 = 0.02 seconds
+    double meancorrelation = 0.0;
+    // Calculate the mean of the signal
+    for (int i = 0; i < size; i++) {
+        mean += array[i];
+    }
+    meancorrelation /= size;
+     for (int i = 0; i < size - lag; i++) {
+        numerator += (array[i] - meancorrelation) * (array[i + lag] - meancorrelation);
+        denominator += std::pow(array[i] - meancorrelation, 2);
+    }
+    double autocorrelation = numerator / denominator;
+    indicesreturn.autocorrelationindex=autocorrelation;
     return indicesreturn;
 };
 };

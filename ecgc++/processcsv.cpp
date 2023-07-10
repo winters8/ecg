@@ -116,8 +116,9 @@ std::vector<ecg_singlederiv> ProcessCSV::readNormalizeCSV(std::string directory)
         std::filesystem::path filePath(filename);
         std::string fileECG = filePath.filename().string();
         int size = sizeof(A.valor) / sizeof(A.valor[0]);
-        index = ECG.calculateNormalizedStandardDeviationAndBPM(fileECG,A.valor,size);
-        ECG.setAutocorrelation_index(index.normalizedStandardDeviation);
+        index = ECG.calculateNSDeviationBPMAndAutocorrelation(fileECG,A.valor,size);
+        ECG.setNSDeviation(index.NSDeviation);
+        ECG.setAutocorrelation_index(index.autocorrelationindex);
         ECG.setBpm_index(index.bpm);
         ECG.setID_ECG(fileECG);
         ECG.setderivnorm(A);
