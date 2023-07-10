@@ -220,38 +220,6 @@ class Network {
      return thrshld;
    }
 
-   double newNetwork(std::vector<ComparativeCosine> CosinesAll, double thrd){
-    std::cout << "procesando new network \n";
-     //ifstream inFile;
-     ofstream outFile;
-     unsigned long nNod, nEdg ,n;
-     std::string o, d;
-     double w;
-     nEdgesNew = 0;
-     //inFile.open(fileName);
-     outFile.open("./src/newNetwork.csv");
-     //inFile >> nNod;
-     //outFile << nNod << endl;
-     //inFile >> nEdg;
-      nEdg=CosinesAll.size();
-     n = 0;
-     for (unsigned long i = 0; i< nEdg; i++){
-      o=CosinesAll[i].IDA;
-      d=CosinesAll[i].IDB;
-      w=CosinesAll[i].cosineindez;
-      if (w >= thrd) {
-        nEdgesNew++;
-        outFile << o << " " << d << " " << w << endl;
-        n++;
-      }
-    }
-     outFile.close();
-
-     // Edge density
-     density = nEdgesNew/ ((nNodes * (nNodes - 1.0)) / 2.0);
-     return density; // Edge density
-   }
-
    ~Network() {
      // Poner bien el destructor
      //delete[] nodes;

@@ -31,5 +31,6 @@ public:
 int NormalizeBeginingpoingECGDATA(std::string directory,int columnIndex);
 std::vector<ecg_singlederiv> readNormalizeCSV(std::string directory);
 int findFirstRPeak(deriv A);
+double newNetwork(std::vector<ComparativeCosine> CosinesAll, double thrd,unsigned long nNodes);
 };
 #endif
