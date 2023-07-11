@@ -93,7 +93,7 @@ class Network {
           e.origin=CosinesAll[i].IDA;
           e.originumber=CosinesAll[i].i;
           e.destinationnumber=CosinesAll[i].j;
-          e.destination=CosinesAll[0].IDB;
+          e.destination=CosinesAll[i].IDB;
           w=CosinesAll[i].cosineindez;
       aux++;    // Counting the actual number of edges read
      }
