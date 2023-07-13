@@ -69,6 +69,7 @@ std::vector<ComparativeCosine> NetworkProcesses::cosineSimilarity(std::vector<ec
                         /*fiter for incorrect valors*/
                         if(division<=1 && division>=-1){
                         cosineprivate.push_back(compartiva);
+                        
                         }                    
                     }
             

@@ -24,6 +24,7 @@ int main(){
     std::chrono::duration<double> tiempoSecuencial1 = fin_secuencial1 - inicio_secuencial1;
 
     int size= ECGList.size();
+
     auto inicio_paralelo = std::chrono::high_resolution_clock::now();
     std::vector<ComparativeCosine> CosinesAll = networkprocesses.cosineSimilarity(ECGList);
     auto fin_paralelo = std::chrono::high_resolution_clock::now();
@@ -35,7 +36,7 @@ int main(){
     thrs = ejem.threshold();
     reader.newNetwork(CosinesAll,thrs,size);
     auto fin_secuencial2 = std::chrono::high_resolution_clock::now();
-     std::chrono::duration<double> tiempoSecuencial2 = fin_secuencial2 - inicio_secuencial2;
+    std::chrono::duration<double> tiempoSecuencial2 = fin_secuencial2 - inicio_secuencial2;
     double tiempoSecuencialTotal = tiempoSecuencial1.count() + tiempoSecuencial2.count();
     double tiempoParaleloTotal = tiempoParalelo.count();
     double speedup = tiempoSecuencialTotal / tiempoParaleloTotal;
