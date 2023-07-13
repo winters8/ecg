@@ -204,7 +204,7 @@ class Network {
          }
        }
        if (allConnected) {
-         wEnd = wMax;
+         //wEnd = wMax;
          wIni = thresholds[nCores - 1];
        }
        std::cout << "wIni, wEnd: " << wIni << " " << wEnd << endl << endl;

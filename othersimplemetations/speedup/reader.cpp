@@ -54,7 +54,6 @@ std::vector<Edgenew> reader::readCSV(const std::string& filename) {
         if (std::getline(ss, field, ',')) {
             d.weight = std::stod(field);
         }
-        std::cout << "añadido edge con peso: "<<d.weight<<"\n";
         ecgevector.push_back(d);
     }
     return ecgevector;
