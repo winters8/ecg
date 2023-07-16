@@ -144,7 +144,7 @@ public:
     double meancorrelation = 0.0;
     // Calculate the mean of the signal
     for (int i = 0; i < size; i++) {
-        mean += array[i];
+        meancorrelation += array[i];
     }
     meancorrelation /= size;
      for (int i = 0; i < size - lag; i++) {
