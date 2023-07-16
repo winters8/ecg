@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.signal import find_peaks
 
 
 # Leer el archivo CSV con los datos del ECG
@@ -21,12 +20,8 @@ plt.grid(True)
 plt.show()
 plt.savefig('matplot2.png')
 
-# Detectar picos en el ECG
-picos, _ = find_peaks(voltaje, height=0)
-
-# Calcular el número de picos por minuto
-tiempo_total = tiempo.iloc[-1] - tiempo.iloc[0]  # Duración total del ECG
-minutos = tiempo_total / 60
-pulsaciones_por_minuto = len(picos) / minutos
-
-print('Pulsaciones por minuto:', pulsaciones_por_minuto)
+intervalos_tiempo = tiempo.diff().dropna()
+promedio_intervalo_tiempo = intervalos_tiempo.mean()
+# Convierte el promedio de intervalo de tiempo a pulsaciones por minuto
+pulsaciones_por_minuto = 60 / promedio_intervalo_tiempo
+print("Pulsaciones por minuto:", pulsaciones_por_minuto)
