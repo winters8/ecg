@@ -159,23 +159,25 @@ double ProcessCSV::newNetwork(std::vector<ComparativeCosine> CosinesAll, double 
     unsigned long nEdgesNew;
     double density;
     std::cout << "procesando new network \n";
-     std::ofstream outFile;
-     unsigned long nNod, nEdg ,n;
-     std::string o, d;
-     double w;
-     nEdgesNew = 0;
-     outFile.open("./src/newNetwork.csv");
-      nEdg=CosinesAll.size();
-     n = 0;
-     for (unsigned long i = 0; i< nEdg; i++){
-      o=CosinesAll[i].IDA;
-      d=CosinesAll[i].IDB;
-      w=CosinesAll[i].cosineindez;
-      if (w >= thrd) {
-        nEdgesNew++;
-        outFile << o << " " << d << " " << w << std::endl;
-        n++;
-      }
+    std::ofstream outFile;
+    unsigned long nNod, nEdg ,n;
+    std::string o, d;
+    double w;
+    nEdgesNew = 0;
+    outFile.open("./src/newNetwork.csv");
+    nEdg=CosinesAll.size();
+    outFile << "Source" <<","<<"Target"<<"," << "Weight" << std::endl;
+    n = 0;
+    for (unsigned long i = 0; i< nEdg; i++){
+        o=CosinesAll[i].IDA;
+        d=CosinesAll[i].IDB;
+        w=CosinesAll[i].cosineindez;
+        
+        if (w >= thrd) {
+            nEdgesNew++;
+            outFile << o << "," << d << "," << w << std::endl;
+            n++;
+        }
     }
      outFile.close();
 
