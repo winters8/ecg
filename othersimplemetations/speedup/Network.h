@@ -229,7 +229,7 @@ double newNetwork(std::vector<Edgenew> CosinesAll, double thrd,unsigned long nNo
      std::string o, d;
      double w;
      nEdgesNew = 0;
-     outFile.open("./src/newNetwork.csv");
+     outFile.open("./src/newNetwork2.csv");
       nEdg=CosinesAll.size();
      n = 0;
      for (unsigned long i = 0; i< nEdg; i++){
